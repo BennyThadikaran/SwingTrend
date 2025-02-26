@@ -5,7 +5,7 @@ Usage
 Installation
 ------------
 
-To use ``swing``, first install it using pip:
+To use ``SwingTrend``, first install it using pip:
 
 .. code:: console
 
@@ -20,7 +20,7 @@ Basic example
 
 .. code-block:: python
 
-  from swing import Swing
+  from swingtrend import Swing
 
   swing = Swing(retrace_threshold_pct=5)
 
@@ -44,7 +44,7 @@ Example showing how to plot lines in mplfinance
 .. code-block:: python
 
   import mplfinance as mpf
-  from Swing import Swing
+  from swingtrend import Swing
 
   swing = Swing(retrace_threshold_pct=8)
 
@@ -91,7 +91,7 @@ Debug mode is useful when trying to understand the program. Have a chart in fron
 .. code-block:: python
 
   import logging
-  from swing import Swing
+  from swingtrend import Swing
 
   # Make sure to set basicConfig for logging
   logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
@@ -101,19 +101,19 @@ Debug mode is useful when trying to understand the program. Have a chart in fron
 API
 ___
 
-.. autoclass:: swing.Swing
+.. autoclass:: swingtrend.Swing
 
 Methods
 -------
 
-.. automethod:: swing.Swing.run
+.. automethod:: swingtrend.Swing.run
 
-.. automethod:: swing.Swing.identify
+.. automethod:: swingtrend.Swing.identify
 
-.. automethod:: swing.Swing.is_sideways
+.. automethod:: swingtrend.Swing.is_sideways
 
-.. automethod:: swing.Swing.reset
+.. automethod:: swingtrend.Swing.reset
 
-.. automethod:: swing.Swing.pack
+.. automethod:: swingtrend.Swing.pack
 
-.. automethod:: swing.Swing.unpack
+.. automethod:: swingtrend.Swing.unpack
