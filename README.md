@@ -14,7 +14,13 @@ If you ❤️ my work so far, please 🌟 this repo.
 
 `pip install swingtrend`
 
-To import `from swingtrend import Swing`. See the documentation for more details.
+To import: `from swingtrend import Swing`
+
+To initialize with default setting:
+
+`swing = Swing(retrace_threshold_pct=5, sideways_threshold=20, debug=False)`
+
+See the documentation for more details.
 
 This work was inspired by youtube Channel **Matt Donlevey - Photon Trading**.
 
