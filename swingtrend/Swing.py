@@ -23,6 +23,8 @@ class Swing:
 
     :param retrace_threshold_pct: Default 5.0. Minimum retracement required to qualify a Change of Character (CoCh) level. If None, all retracements qualify.
     :type retrace_threshold_pct: float or None
+    :param sideways_threshold: Default 20. Minimum number of bars after which the trend is considered range-bound or sideways.
+    :type sideways_threshold: int
     :param debug: Default False. Print additional logs for debug purposes.
     :type debug: bool
     """
@@ -43,11 +45,14 @@ class Swing:
     def __init__(
         self,
         retrace_threshold_pct: Optional[float] = 5.0,
+        sideways_threshold: int = 20,
         debug=False,
     ):
 
         if retrace_threshold_pct:
             self.retrace_threshold = retrace_threshold_pct / 100
+
+        self.sideways_threshold = sideways_threshold
 
         self.logger = logging.getLogger(__name__)
 
@@ -67,7 +72,7 @@ class Swing:
 
         If a break of structure occurs or a trend reversal the bar count is reset to 0 until a new SPH or SPL is formed.
         """
-        return self.__bars_since > 20
+        return self.__bars_since > self.sideways_threshold
 
     def run(self, sym: str, df, plot_lines=False, add_series=False):
         """
