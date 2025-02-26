@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Swing Algorithm" href="swing_algorithm.html" /><link rel="prev" title="Swing documentation" href="index.html" />
 
     <!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
-        <title>Usage - SwingTrend 1.0.0-2 documentation</title>
+        <title>Usage - SwingTrend 1.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">SwingTrend 1.0.0-2 documentation</div></a>
+      <a href="index.html"><div class="brand">SwingTrend 1.0.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">SwingTrend 1.0.0-2 documentation</span>
+  <span class="sidebar-brand-text">SwingTrend 1.0.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -331,7 +331,7 @@
 <h3>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="swingtrend.Swing">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swingtrend.</span></span><span class="sig-name descname"><span class="pre">Swing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">retrace_threshold_pct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swingtrend.Swing" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swingtrend.</span></span><span class="sig-name descname"><span class="pre">Swing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">retrace_threshold_pct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sideways_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swingtrend.Swing" title="Link to this definition">¶</a></dt>
 <dd><p>A class to help determine the current trend of an Stock.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Swing.trend:</span> <span class="pre">str</span> <span class="pre">or</span> <span class="pre">None</span></code> - A string indicating the current trend. UP or DOWN or None. Trend will be None if too few candles were provided.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Swing.sph:</span> <span class="pre">float</span> <span class="pre">or</span> <span class="pre">None</span></code> - Swing high indicating the current breakout level to maintain uptrend. If trend is DOWN or None, SPH is None</p>
@@ -342,6 +342,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>retrace_threshold_pct</strong> (<em>float</em><em> or </em><em>None</em>) – Default 5.0. Minimum retracement required to qualify a Change of Character (CoCh) level. If None, all retracements qualify.</p></li>
+<li><p><strong>sideways_threshold</strong> (<em>int</em>) – Default 20. Minimum number of bars after which the trend is considered range-bound or sideways.</p></li>
 <li><p><strong>debug</strong> (<em>bool</em>) – Default False. Print additional logs for debug purposes.</p></li>
 </ul>
 </dd>
@@ -497,7 +498,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=1468c33f"></script>
+</div><script src="_static/documentation_options.js?v=292eb321"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
