@@ -14,7 +14,9 @@ If you ❤️ my work so far, please 🌟 this repo.
 
 `pip install swingtrend`
 
-To import: `from swingtrend import Swing`
+## Basic Usage
+
+`from swingtrend import Swing`
 
 To initialize with default setting:
 
@@ -22,11 +24,17 @@ To initialize with default setting:
 
 See the documentation for more details.
 
+## Inspiration
+
 This work was inspired by youtube Channel **Matt Donlevey - Photon Trading**.
 
 You can watch their video [How To Understand Market Structure](https://www.youtube.com/watch?v=Pd9ASRCHWmQ&t=251) to understand some of the concepts.
 
-To get the Photon method as explained in the video, instantiate the class as `Swing(retrace_threshold_pct=None)`
+## How the class works
+
+See [simple explanation of how the program works](https://bennythadikaran.github.io/SwingTrend/swing_algorithm.html)
+
+To use the Photon method as explained in the video, instantiate the class as `Swing(retrace_threshold_pct=None)`
 
 In the Photon method, both minor and major pivots can result in trend continuation or trend reversal. (This includes a single bar pullback).
 
