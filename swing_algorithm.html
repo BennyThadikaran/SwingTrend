@@ -243,6 +243,8 @@
         <article role="main" id="furo-main-content">
           <section id="swing-algorithm">
 <h1>Swing Algorithm<a class="headerlink" href="#swing-algorithm" title="Link to this heading">¶</a></h1>
+<section id="using-a-chart-example">
+<h2>Using a Chart Example<a class="headerlink" href="#using-a-chart-example" title="Link to this heading">¶</a></h2>
 <img alt="_images/swing-illustration-1.png" src="_images/swing-illustration-1.png" />
 <p>Refering to the image and the counts marked therein,</p>
 <ol class="arabic simple">
@@ -259,6 +261,7 @@
 <li><p>At 6, we see another new SPL level, followed by a Break of Structure (BOS), which create a new CoCh level at 151.8.</p></li>
 <li><p>At 7, the CoCh level of 151.8 is broken with a close above. The trend has now reversed and marked as UP. The lowest point of 130.25 is marked as new CoCh level.</p></li>
 </ol>
+</section>
 <section id="in-summary">
 <h2>In Summary:<a class="headerlink" href="#in-summary" title="Link to this heading">¶</a></h2>
 <p><strong>In an uptrend,</strong></p>
@@ -314,6 +317,22 @@ before the SPH is broken. If not, the BOS is ignored.</p></li>
 </ul>
 <p>If <code class="docutils literal notranslate"><span class="pre">retrace_threshold_pct</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, anytime an SPH is broken, it is treated as a BOS
 regardless of retracement.</p>
+<p>Both methods have their advantages and disadvantages.</p>
+<p><strong>Setting a retrace_threshold_pct:</strong></p>
+<ul class="simple">
+<li><p>It is easier to trail profits on long term positions.</p></li>
+<li><p>Minor pivots or pullbacks will be ignored and you wont be stopped out on minor fluctuations of the market.</p></li>
+</ul>
+<p>In strong uptrends, the retracements may be shallow and you wont get a pivot low for a long period.</p>
+<p>The chart below uses a 8% retrace_threshold_pct. After the SPH is formed at 1292.1 (Marked in yellow), there is no retracement below 8%. If you wait for the reversal level to be hit, that would be a 43% fall from the high! You would need an alternative method here to exit your positions and protect your profits.</p>
+<img alt="_images/swing-with-8-pct-retrace.png" src="_images/swing-with-8-pct-retrace.png" />
+<p><strong>Setting retrace_threshold_pct to None:</strong></p>
+<ul class="simple">
+<li><p>Useful for trailing stops on lower timeframe or even short term positions.</p></li>
+</ul>
+<p>In high volatility conditions, you are more likely to get stopped out by a minor pivot.</p>
+<p>See the image below. After the first SPH is broken with a gap up bar, the market retraces very close to the prior CoCh level.</p>
+<img alt="_images/swing-no-retrace-threshold.png" src="_images/swing-no-retrace-threshold.png" />
 </section>
 </section>
 
@@ -365,6 +384,7 @@ regardless of retracement.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Swing Algorithm</a><ul>
+<li><a class="reference internal" href="#using-a-chart-example">Using a Chart Example</a></li>
 <li><a class="reference internal" href="#in-summary">In Summary:</a></li>
 <li><a class="reference internal" href="#another-explanation">Another explanation</a></li>
 <li><a class="reference internal" href="#retrace-threshold-percent">Retrace Threshold percent</a></li>
