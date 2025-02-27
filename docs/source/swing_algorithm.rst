@@ -2,6 +2,9 @@
 Swing Algorithm
 ===============
 
+Using a Chart Example
+=====================
+
 .. image:: swing-illustration-1.png
 
 Refering to the image and the counts marked therein, 
@@ -83,3 +86,26 @@ If ``retrace_threshold_pct`` is set to a percentage:
 
 If ``retrace_threshold_pct`` is ``None``, anytime an SPH is broken, it is treated as a BOS
 regardless of retracement.
+
+Both methods have their advantages and disadvantages.
+
+**Setting a retrace_threshold_pct:**
+
+* It is easier to trail profits on long term positions. 
+* Minor pivots or pullbacks will be ignored and you wont be stopped out on minor fluctuations of the market.
+
+In strong uptrends, the retracements may be shallow and you wont get a pivot low for a long period.
+
+The chart below uses a 8% retrace_threshold_pct. After the SPH is formed at 1292.1 (Marked in yellow), there is no retracement below 8%. If you wait for the reversal level to be hit, that would be a 43% fall from the high! You would need an alternative method here to exit your positions and protect your profits.
+
+.. image:: swing-with-8-pct-retrace.png
+
+**Setting retrace_threshold_pct to None:**
+
+* Useful for trailing stops on lower timeframe or even short term positions.
+
+In high volatility conditions, you are more likely to get stopped out by a minor pivot. 
+
+See the image below. After the first SPH is broken with a gap up bar, the market retraces very close to the prior CoCh level.
+
+.. image:: swing-no-retrace-threshold.png
