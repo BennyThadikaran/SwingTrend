@@ -1,14 +1,52 @@
 import unittest
-from datetime import datetime, timedelta
+from datetime import datetime
+from unittest.mock import Mock
 
 from context import Swing
 
 
 class TestSwing(unittest.TestCase):
+    """
+    Following test cases are covered
+    pack and reset function
+
+    When trend is None
+
+    - First bar sets high and low
+    - New high but close below high
+    - New low but close above low
+    - Close above high
+    - Close below low
+
+    When trend is UP
+
+    - No SPH and new high
+    - No SPH and bar fails to make new High
+    - Reversal to downtrend
+    - callbacks is attached and called on reveral and breakout
+    - SPH is set and new high but fails to break SPH
+    - trend continuation
+    - SPH broken but retracement below threshold
+    - SPH broken and retracement above threshold
+
+    When trend is DOWN
+
+    - No SPL and new low
+    - No SPL and bar fails to make new Low
+    - Reversal to uptrend
+    - callback is attached and called on reversal and breakout
+    - SPL is set and new low but fails to break SPL
+    - trend continuation
+    - SPL broken but retracement below threshold
+    - SPL broken but retracement above threshold
+    """
+
     def setUp(self) -> None:
         self.swing = Swing(retrace_threshold_pct=None)
 
     def test_pack(self):
+        """Test there are no callables or unserializable objects after packing"""
+
         self.swing.on_breakout = self.swing.on_reversal = print
 
         dct = self.swing.pack()
@@ -19,210 +57,418 @@ class TestSwing(unittest.TestCase):
         self.assertNotIn("on_breakout", dct)
         self.assertNotIn("logger", dct)
 
-    def test_first_candle(self):
-        dt = datetime(2024, 1, 1)
-        self.swing.identify(dt, 105.0, 90, 100)
+    def test_reset(self):
+        data = dict(
+            high=100,
+            low=90,
+            trend="UP",
+            coc=85,
+            sph=100,
+            spl=90,
+            high_dt="",
+            low_dt="",
+            coc_dt="",
+            sph_dt="",
+            spl_dt="",
+        )
 
-        self.assertEqual(self.swing.high, 105)
+        self.swing.bars_since = 9
+
+        self.swing.unpack(data)
+        self.swing.reset()
+
+        for key in data.keys():
+            self.assertIsNone(getattr(self.swing, key))
+
+        self.assertEqual(self.swing.bars_since, 0)
+
+    def test_first_bar(self):
+        """First bar marks the high and low"""
+
+        dt = datetime(2024, 1, 1)
+        self.swing.identify(dt, 110, 90, 100)
+
+        self.assertEqual(self.swing.high, 110)
         self.assertEqual(self.swing.low, 90)
         self.assertIsNone(self.swing.trend)
 
         self.assertEqual(self.swing.high_dt, dt)
         self.assertEqual(self.swing.low_dt, dt)
 
-    def test_second_candle_close_low(self):
-        dt_1 = datetime(2024, 1, 2)
-        dt_2 = dt_1 + timedelta(1)
+    def test_second_bar_new_high_close_below_first_high(self):
+        """Second bar makes new high, fails to close above"""
 
-        self.swing.unpack(dict(high=105, low=90, high_dt=dt_1, low_dt=dt_1))
-        self.swing.identify(dt_2, 100, 85, 88)
+        dt = datetime(2024, 1, 1)
+        self.swing.unpack(dict(high=110, low=90))
+        self.swing.identify(dt, 112, 95, 102)
 
-        self.assertEqual(self.swing.high, 105)
+        self.assertEqual(self.swing.high, 112)
+        self.assertEqual(self.swing.low, 90)
+        self.assertIsNone(self.swing.trend)
+
+    def test_second_bar_new_low_close_above_first_low(self):
+        """Second bar makes new low, fails to close below"""
+
+        dt = datetime(2024, 1, 1)
+        self.swing.unpack(dict(high=110, low=90))
+        self.swing.identify(dt, 108, 85, 91)
+
+        self.assertEqual(self.swing.high, 110)
+        self.assertEqual(self.swing.low, 85)
+        self.assertIsNone(self.swing.trend)
+
+    def test_second_bar_close_below_first_low(self):
+        dt_1 = datetime(2024, 1, 1)
+        dt_2 = datetime(2024, 1, 2)
+
+        self.swing.unpack(dict(high=100, low=90, high_dt=dt_1, low_dt=dt_1))
+        self.swing.identify(dt_2, 95, 85, 85)
+
+        self.assertEqual(self.swing.high, 100)
         self.assertEqual(self.swing.low, 85)
         self.assertEqual(self.swing.trend, "DOWN")
 
         self.assertEqual(self.swing.high_dt, dt_1)
         self.assertEqual(self.swing.low_dt, dt_2)
 
-    def test_second_candle_close_high(self):
-        dt_1 = datetime(2024, 1, 2)
-        dt_2 = dt_1 + timedelta(1)
+    def test_second_bar_close_above_first_high(self):
+        dt_1 = datetime(2024, 1, 1)
+        dt_2 = datetime(2024, 1, 2)
 
-        self.swing.unpack(dict(high=105, low=90, high_dt=dt_1, low_dt=dt_1))
-        self.swing.identify(dt_2, 110, 95, 108)
+        self.swing.unpack(dict(high=100, low=90, high_dt=dt_1, low_dt=dt_1))
+        self.swing.identify(dt_2, 105, 95, 102)
 
-        self.assertEqual(self.swing.high, 110)
+        self.assertEqual(self.swing.high, 105)
         self.assertEqual(self.swing.low, 90)
         self.assertEqual(self.swing.trend, "UP")
 
         self.assertEqual(self.swing.high_dt, dt_2)
         self.assertEqual(self.swing.low_dt, dt_1)
 
-    def test_second_candle_outside_bar(self):
-        dt_1 = datetime(2024, 1, 1)
+    def test_uptrend_new_high_with_no_sph(self):
+        """SPH is not set, bar makes new high"""
+        dt = datetime(2024, 1, 1)
+        self.swing.unpack(dict(trend="UP", high=100))
 
-        self.swing.unpack(dict(high=105, low=90, high_dt=dt_1, low_dt=dt_1))
-        self.swing.identify(datetime(2024, 1, 2), 110, 85, 95)
-
-        self.assertEqual(self.swing.high, 110)
-        self.assertEqual(self.swing.low, 85)
-        self.assertIsNone(self.swing.trend)
-
-    def test_consecutive_highs(self):
-        ohlc = (
-            (datetime(2024, 1, 1), 100, 90, 98),
-            (datetime(2024, 1, 2), 105, 95, 103),
-            (datetime(2024, 1, 3), 110, 100, 108),
-            (datetime(2024, 1, 4), 115, 105, 113),
-        )
-
-        for t in ohlc:
-            self.swing.identify(*t)
-
-        self.assertEqual(self.swing.high, 115)
-        self.assertEqual(self.swing.low, 105)
-        self.assertEqual(self.swing.trend, "UP")
-
-    def test_consecutive_lows(self):
-        ohlc = (
-            (datetime(2024, 1, 1), 100, 90, 93),
-            (datetime(2024, 1, 2), 95, 85, 88),
-            (datetime(2024, 1, 3), 90, 80, 83),
-            (datetime(2024, 1, 4), 85, 75, 78),
-        )
-
-        for t in ohlc:
-            self.swing.identify(*t)
-
-        self.assertEqual(self.swing.high, 85)
-        self.assertEqual(self.swing.low, 75)
-        self.assertEqual(self.swing.trend, "DOWN")
-
-    def test_first_spl(self):
-        ohlc = (
-            (datetime(2024, 1, 1), 100, 90, 93),
-            (datetime(2024, 1, 2), 95, 85, 88),
-            (datetime(2024, 1, 3), 90, 80, 83),
-            (datetime(2024, 1, 4), 85, 75, 78),
-        )
-
-        for t in ohlc:
-            self.swing.identify(*t)
-
-        self.swing.identify(datetime(2024, 1, 5), 87, 78, 80)
-        self.assertEqual(self.swing.spl, 75)
-        self.assertEqual(self.swing.coc, 100)
-
-    def test_first_sph(self):
-        ohlc = (
-            (datetime(2024, 1, 1), 100, 90, 98),
-            (datetime(2024, 1, 2), 105, 95, 103),
-            (datetime(2024, 1, 3), 110, 100, 108),
-            (datetime(2024, 1, 4), 115, 105, 113),
-        )
-
-        for t in ohlc:
-            self.swing.identify(*t)
-
-        self.swing.identify(datetime(2024, 1, 5), 112, 108, 110)
-        self.assertEqual(self.swing.sph, 115)
-        self.assertEqual(self.swing.coc, 90)
-
-    def test_reversal_attempt_closed_above(self):
-        """Low below CoC but closed above, trend remains UP"""
-
-        self.swing.unpack(dict(trend="UP", sph=110, high=110, low=100, coc=90))
-
-        self.swing.identify(datetime(2024, 12, 1), high=95, low=85, close=92)
+        self.swing.identify(dt, high=105, low=95, close=103)
 
         self.assertEqual(self.swing.trend, "UP")
-        self.assertEqual(self.swing.low, 85)
-        self.assertEqual(self.swing.high, 110)
-        self.assertEqual(self.swing.coc, 90)
+        self.assertEqual(self.swing.high, 105)
+        self.assertEqual(self.swing.high_dt, dt)
 
-    def test_reversal_down(self):
-        """Close below CoC , trend reversal Down"""
+        self.assertEqual(self.swing.low, 95)
+        self.assertEqual(self.swing.low_dt, dt)
 
-        self.swing.unpack(
-            dict(
-                trend="UP",
-                sph=110,
-                high=110,
-                low=100,
-                coc=90,
-                high_dt=datetime(2024, 12, 1),
-            )
-        )
+    def test_downtrend_new_low_with_no_spl(self):
+        """SPL is not set, bar makes new low"""
+        dt = datetime(2024, 1, 1)
+        self.swing.unpack(dict(trend="DOWN", low=100))
 
-        self.swing.identify(datetime(2024, 12, 2), high=95, low=85, close=88)
-
-        self.assertEqual(self.swing.trend, "DOWN")
-        self.assertEqual(self.swing.low, 85)
-        self.assertIsNone(self.swing.high)
-        self.assertEqual(self.swing.coc, 110)
-
-    def test_reversal_up(self):
-        """Close above CoC , trend reversal UP"""
-
-        self.swing.unpack(
-            dict(
-                trend="DOWN",
-                spl=90,
-                low=90,
-                high=105,
-                coc=110,
-                low_dt=datetime(2024, 12, 1),
-            )
-        )
-
-        self.swing.identify(datetime(2024, 12, 2), high=115, low=100, close=112)
-
-        self.assertEqual(self.swing.trend, "UP")
-        self.assertIsNone(self.swing.low)
-        self.assertEqual(self.swing.high, 115)
-        self.assertEqual(self.swing.coc, 90)
-
-    def test_trend_continuation_up(self):
-        """Close above SPH, trend continues UP"""
-
-        self.swing.unpack(
-            dict(
-                trend="UP",
-                sph=110,
-                high=110,
-                low=100,
-                coc=90,
-                low_dt=datetime(2024, 12, 1),
-            )
-        )
-
-        self.swing.identify(datetime(2024, 12, 2), high=115, low=105, close=112)
-
-        self.assertEqual(self.swing.trend, "UP")
-        self.assertEqual(self.swing.high, 115)
-        self.assertEqual(self.swing.low, 100)
-        self.assertEqual(self.swing.coc, 100)
-
-    def test_trend_continuation_down(self):
-        """Close above SPH, trend continues UP"""
-
-        self.swing.unpack(
-            dict(
-                trend="DOWN",
-                spl=90,
-                low=90,
-                high=105,
-                coc=110,
-                high_dt=datetime(2024, 12, 1),
-            )
-        )
-
-        self.swing.identify(datetime(2024, 12, 2), high=102, low=85, close=88)
+        self.swing.identify(dt, high=105, low=95, close=95)
 
         self.assertEqual(self.swing.trend, "DOWN")
         self.assertEqual(self.swing.high, 105)
-        self.assertEqual(self.swing.low, 85)
-        self.assertEqual(self.swing.coc, 105)
+        self.assertEqual(self.swing.high_dt, dt)
+
+        self.assertEqual(self.swing.low, 95)
+        self.assertEqual(self.swing.low_dt, dt)
+
+    def test_uptrend_new_sph_formation(self):
+        """New SPH formation, bar fails to make new high"""
+
+        dt_1 = datetime(2024, 1, 1)
+        dt_2 = datetime(2023, 12, 2)
+        self.swing.unpack(
+            dict(
+                trend="UP",
+                high=100,
+                low=90,
+                high_dt=dt_2,
+            )
+        )
+
+        self.swing.identify(dt_1, high=98, low=95, close=95)
+
+        self.assertEqual(self.swing.sph, 100)
+        self.assertEqual(self.swing.sph_dt, dt_2)
+        self.assertEqual(self.swing.low, 95)
+
+    def test_downtrend_new_spl_formation(self):
+        """New SPL formation, bar fails to make new low"""
+
+        dt_1 = datetime(2024, 1, 1)
+        dt_2 = datetime(2023, 12, 2)
+        self.swing.unpack(
+            dict(
+                trend="DOWN",
+                high=100,
+                low=90,
+                low_dt=dt_2,
+            )
+        )
+
+        self.swing.identify(dt_1, high=98, low=92, close=92)
+
+        self.assertEqual(self.swing.spl, 90)
+        self.assertEqual(self.swing.spl_dt, dt_2)
+        self.assertEqual(self.swing.high, 98)
+
+    def test_uptrend_reversal_to_downtrend(self):
+        """Low breaks the coc on closing basis"""
+
+        dt_1 = datetime(2024, 1, 1)
+        dt_2 = datetime(2023, 12, 2)
+
+        self.swing.unpack(
+            dict(trend="UP", high=100, low=90, coc=85, high_dt=dt_2)
+        )
+
+        self.swing.identify(dt_1, high=95, low=82, close=82)
+
+        self.assertEqual(self.swing.trend, "DOWN")
+        self.assertEqual(self.swing.coc, 100)
+        self.assertEqual(self.swing.coc_dt, dt_2)
+        self.assertEqual(self.swing.low, 82)
+        self.assertEqual(self.swing.low_dt, dt_1)
+
+    def test_downtrend_reversal_to_uptrend(self):
+        """High break the coc on closing basis"""
+
+        dt_1 = datetime(2024, 1, 1)
+        dt_2 = datetime(2023, 12, 2)
+
+        self.swing.unpack(
+            dict(trend="DOWN", high=100, low=90, coc=105, low_dt=dt_2)
+        )
+
+        self.swing.identify(dt_1, high=107, low=95, close=107)
+
+        self.assertEqual(self.swing.trend, "UP")
+        self.assertEqual(self.swing.coc, 90)
+        self.assertEqual(self.swing.coc_dt, dt_2)
+        self.assertEqual(self.swing.high, 107)
+        self.assertEqual(self.swing.high_dt, dt_1)
+
+    def test_on_reversal_callback_called_in_uptrend(self):
+        """On reversal callback function is called if attached"""
+
+        dt_1 = datetime(2024, 1, 1)
+        dt_2 = datetime(2023, 12, 2)
+
+        self.swing.unpack(
+            dict(
+                trend="UP",
+                high=100,
+                low=90,
+                coc=85,
+                high_dt=dt_2,
+            )
+        )
+
+        mock = Mock(spec=lambda *args, **kwargs: None)
+
+        self.swing.on_reversal = mock
+
+        self.swing.identify(dt_1, high=95, low=82, close=82)
+
+        mock.assert_called_once_with(
+            self.swing, date=dt_1, close=82, reversal_level=85
+        )
+
+    def test_on_reversal_callback_called_in_downtrend(self):
+        """On reversal callback function is called if attached"""
+
+        dt_1 = datetime(2024, 1, 1)
+        dt_2 = datetime(2023, 12, 2)
+
+        self.swing.unpack(
+            dict(trend="DOWN", high=100, low=90, coc=105, low_dt=dt_2)
+        )
+
+        mock = Mock(spec=lambda *args, **kwargs: None)
+
+        self.swing.on_reversal = mock
+
+        self.swing.identify(dt_1, high=107, low=95, close=107)
+
+        mock.assert_called_once_with(
+            self.swing, date=dt_1, close=107, reversal_level=105
+        )
+
+    def test_uptrend_new_high_with_close_below_sph(self):
+        """New Bar high above SPH but close below SPH"""
+
+        dt = datetime(2023, 12, 25)
+        self.swing.unpack(
+            dict(trend="UP", sph=100, high=100, low=90, low_dt=dt)
+        )
+
+        self.swing.identify(datetime(2024, 1, 1), high=105, low=95, close=99)
+
+        self.assertEqual(self.swing.trend, "UP")
+        self.assertEqual(self.swing.high, 105)
+        self.assertEqual(self.swing.low, 90)
+        self.assertEqual(self.swing.low_dt, dt)
+
+    def test_downtrend_new_low_with_close_above_spl(self):
+        """New Bar low below SPL but close above SPL."""
+
+        dt = datetime(2023, 12, 25)
+        self.swing.unpack(
+            dict(trend="DOWN", spl=100, high=110, low=100, high_dt=dt)
+        )
+
+        self.swing.identify(datetime(2024, 1, 1), high=105, low=95, close=102)
+
+        self.assertEqual(self.swing.trend, "DOWN")
+        self.assertEqual(self.swing.low, 95)
+        self.assertEqual(self.swing.high, 110)
+        self.assertEqual(self.swing.high_dt, dt)
+
+    def test_uptrend_continuation(self):
+        """SPH is set and new SPH formed."""
+
+        dt = datetime(2023, 12, 25)
+
+        self.swing.unpack(
+            dict(trend="UP", sph=100, high=100, low=90, low_dt=dt)
+        )
+
+        self.swing.identify(datetime(2024, 1, 1), high=103, low=95, close=102)
+
+        self.assertIsNone(self.swing.sph)
+        self.assertIsNone(self.swing.sph_dt)
+        self.assertEqual(self.swing.coc, 90)
+        self.assertEqual(self.swing.coc_dt, dt)
+
+    def test_downtrend_continuation(self):
+        """SPL is set and new SPL formed."""
+        dt = datetime(2023, 12, 25)
+
+        self.swing.unpack(
+            dict(trend="DOWN", spl=100, high=110, low=95, high_dt=dt)
+        )
+
+        self.swing.identify(datetime(2024, 1, 1), high=103, low=93, close=93)
+
+        self.assertIsNone(self.swing.spl)
+        self.assertIsNone(self.swing.spl_dt)
+        self.assertEqual(self.swing.coc, 110)
+        self.assertEqual(self.swing.coc_dt, dt)
+
+    def test_sph_broken_within_threshold(self):
+        """SPH broken but retracement is within threshold, coc remains same and breakout is ignored."""
+
+        dt = datetime(2023, 12, 25)
+
+        self.swing.retrace_threshold = 8 / 100
+
+        self.swing.unpack(
+            dict(
+                trend="UP",
+                sph=100,
+                coc=90,
+                high=105,
+                low=95,
+                low_dt=dt,
+                coc_dt=dt,
+            )
+        )
+
+        self.swing.identify(datetime(2024, 1, 1), high=106, low=95, close=102)
+
+        self.assertEqual(self.swing.high, 106)
+        self.assertEqual(self.swing.coc, 90)
+        self.assertEqual(self.swing.coc_dt, dt)
+        self.assertIsNone(self.swing.sph)
+
+    def test_spl_broken_within_threshold(self):
+        """SPL broken but retracement is within threshold, coc remains same and breakout is ignored."""
+
+        dt = datetime(2023, 12, 25)
+
+        self.swing.retrace_threshold = 8 / 100
+
+        self.swing.unpack(
+            dict(
+                trend="DOWN",
+                spl=100,
+                coc=110,
+                high=110,
+                low=100,
+                high_dt=dt,
+                coc_dt=dt,
+            )
+        )
+
+        self.swing.identify(datetime(2024, 1, 1), high=103, low=95, close=95)
+
+        self.assertEqual(self.swing.low, 95)
+        self.assertEqual(self.swing.coc, 110)
+        self.assertEqual(self.swing.coc_dt, dt)
+        self.assertIsNone(self.swing.spl)
+
+    def test_sph_broken_exceeds_threshold(self):
+        """SPH broken and retracement is above threshold"""
+
+        dt = datetime(2023, 12, 25)
+
+        self.swing.retrace_threshold = 3 / 100
+
+        self.swing.unpack(
+            dict(
+                trend="UP",
+                sph=100,
+                coc=90,
+                high=105,
+                low=95,
+                low_dt=dt,
+                coc_dt=dt,
+            )
+        )
+
+        self.swing.identify(datetime(2024, 1, 1), high=106, low=95, close=102)
+
+        self.assertEqual(self.swing.high, 106)
+        self.assertEqual(self.swing.coc, 95)
+        self.assertEqual(self.swing.coc_dt, dt)
+        self.assertIsNone(self.swing.sph)
+
+    def test_on_breakout_callback_called_in_uptrend(self):
+        """On breakout callback function is called if attached"""
+
+        dt_1 = datetime(2023, 12, 25)
+        dt_2 = datetime(2024, 1, 1)
+
+        self.swing.unpack(dict(trend="UP", sph=100, low=95, low_dt=dt_1))
+
+        mock = Mock(spec=lambda *args, **kwargs: None)
+
+        self.swing.on_breakout = mock
+
+        self.swing.identify(dt_2, high=106, low=95, close=102)
+
+        mock.assert_called_once_with(
+            self.swing, date=dt_2, close=102, breakout_level=100
+        )
+
+    def test_on_breakout_callback_called_in_downtrend(self):
+        """On breakout callback function is called if attached"""
+
+        dt_1 = datetime(2023, 12, 25)
+        dt_2 = datetime(2024, 1, 1)
+
+        self.swing.unpack(dict(trend="DOWN", spl=100, high=110, high_dt=dt_1))
+
+        mock = Mock(spec=lambda *args, **kwargs: None)
+
+        self.swing.on_breakout = mock
+
+        self.swing.identify(dt_2, high=106, low=95, close=95)
+
+        mock.assert_called_once_with(
+            self.swing, date=dt_2, close=95, breakout_level=100
+        )
 
 
 if __name__ == "__main__":
