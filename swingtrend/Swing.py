@@ -84,7 +84,7 @@ class Swing:
         :type df: pandas.DataFrame
         :param plot_lines: Default False. Generate line data marking CoCh levels to plot in Matplotlib
         :type plot_lines: bool
-        :param add_series: Default False. If True, adds a Trend column to the DataFrame. 1 indicates UP, 0 indicates DOWN.
+        :param add_series: Default False. If True, adds a `TREND` column to the DataFrame. 1 indicates UP, 0 indicates DOWN.
         :type add_series: bool
         """
         self.symbol = sym
