@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Usage" href="usage.html" />
 
     <!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
-        <title>Swing Algorithm - SwingTrend 1.0.1 documentation</title>
+        <title>Swing Algorithm - SwingTrend 1.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">SwingTrend 1.0.1 documentation</div></a>
+      <a href="index.html"><div class="brand">SwingTrend 1.0.2 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">SwingTrend 1.0.1 documentation</span>
+  <span class="sidebar-brand-text">SwingTrend 1.0.2 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -318,13 +318,13 @@ before the SPH is broken. If not, the BOS is ignored.</p></li>
 <p>If <code class="docutils literal notranslate"><span class="pre">retrace_threshold_pct</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, anytime an SPH is broken, it is treated as a BOS
 regardless of retracement.</p>
 <p>Both methods have their advantages and disadvantages.</p>
-<p><strong>Setting a retrace_threshold_pct:</strong></p>
+<p><strong>Why set a retrace_threshold_pct:</strong></p>
 <ul class="simple">
 <li><p>It is easier to trail profits on long term positions.</p></li>
 <li><p>Minor pivots or pullbacks will be ignored and you wont be stopped out on minor fluctuations of the market.</p></li>
 </ul>
-<p>In strong uptrends, the retracements may be shallow and you wont get a pivot low for a long period.</p>
-<p>The chart below uses a 8% retrace_threshold_pct. After the SPH is formed at 1292.1 (Marked in yellow), there is no retracement below 8%. If you wait for the reversal level to be hit, that would be a 43% fall from the high! You would need an alternative method here to exit your positions and protect your profits.</p>
+<p>In strong uptrends, the retracements may be shallow and there maybe no deep enough retracement. This is a potential downside of this method.</p>
+<p>The chart below uses a 8% retrace_threshold_pct. After the SPH is broken at 1292.1 (Marked in yellow), the stock goes into a tight uptrend channel with little to no retracement. In such cases, there is no new CoCh levels to trail your profit. The last CoCh level of 1109.45 is almost 43% down from the highs! For such cases, you need an alternative method to trail positions and protect your profits.</p>
 <img alt="_images/swing-with-8-pct-retrace.png" src="_images/swing-with-8-pct-retrace.png" />
 <p><strong>Setting retrace_threshold_pct to None:</strong></p>
 <ul class="simple">
@@ -399,7 +399,7 @@ regardless of retracement.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=292eb321"></script>
+</div><script src="_static/documentation_options.js?v=1ed6394b"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>

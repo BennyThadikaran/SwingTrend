@@ -89,14 +89,14 @@ regardless of retracement.
 
 Both methods have their advantages and disadvantages.
 
-**Setting a retrace_threshold_pct:**
+**Why set a retrace_threshold_pct:**
 
 * It is easier to trail profits on long term positions. 
 * Minor pivots or pullbacks will be ignored and you wont be stopped out on minor fluctuations of the market.
 
-In strong uptrends, the retracements may be shallow and you wont get a pivot low for a long period.
+In strong uptrends, the retracements may be shallow and there maybe no deep enough retracement. This is a potential downside of this method.
 
-The chart below uses a 8% retrace_threshold_pct. After the SPH is formed at 1292.1 (Marked in yellow), there is no retracement below 8%. If you wait for the reversal level to be hit, that would be a 43% fall from the high! You would need an alternative method here to exit your positions and protect your profits.
+The chart below uses a 8% retrace_threshold_pct. After the SPH is broken at 1292.1 (Marked in yellow), the stock goes into a tight uptrend channel with little to no retracement. In such cases, there is no new CoCh levels to trail your profit. The last CoCh level of 1109.45 is almost 43% down from the highs! For such cases, you need an alternative method to trail positions and protect your profits.
 
 .. image:: swing-with-8-pct-retrace.png
 
