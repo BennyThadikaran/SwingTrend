@@ -56,7 +56,7 @@ class Swing:
             self.logger.setLevel(logging.DEBUG)
 
         self.plot = False
-        self.__bars_since = 0
+        self.bars_since = 0
 
     def is_sideways(self) -> bool:
         """
@@ -68,7 +68,7 @@ class Swing:
 
         If a break of structure occurs or a trend reversal the bar count is reset to 0 until a new SPH or SPL is formed.
         """
-        return self.__bars_since > self.sideways_threshold
+        return self.bars_since > self.sideways_threshold
 
     def run(self, sym: str, df, plot_lines=False, add_series=False):
         """
@@ -151,10 +151,11 @@ class Swing:
             # Increment bar count on every bar
             # Reset count, if SPH is broken or reversal to downtrend
             # or new highs are being formed.
-            self.__bars_since += 1
+            self.bars_since += 1
 
+            if self.sph:
                 if self.high and high > self.high:
-                    self.__bars_since = 0
+                    self.bars_since = 0
                     self.high = high
                     self.high_dt = dt
 
@@ -167,7 +168,7 @@ class Swing:
 
                     sph = self.sph
                     self.sph = self.sph_dt = None
-                    self.__bars_since = 0
+                    self.bars_since = 0
 
                     if (
                         self.retrace_threshold
@@ -205,7 +206,7 @@ class Swing:
                     return
 
             if self.high and high > self.high:
-                self.__bars_since = 0
+                self.bars_since = 0
                 self.high = high
                 self.high_dt = dt
                 self.low = low
@@ -216,7 +217,7 @@ class Swing:
                     self.sph = self.high
                     self.sph_dt = self.high_dt
                     self.low = self.low_dt = None
-                    self.__bars_since = 1  # reset but count the current bar
+                    self.bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
                         f"{dt}: Swing High - UP SPH: {self.sph} CoCh: {self.coc}"
@@ -245,12 +246,12 @@ class Swing:
             # Increment bar count on every bar
             # Reset count, if SPL is broken or reversal to downtrend
             # or new lows are being formed.
-            self.__bars_since += 1
+            self.bars_since += 1
 
             if self.spl:
 
                 if self.low and low < self.low:
-                    self.__bars_since = 0
+                    self.bars_since = 0
                     self.low = low
                     self.low_dt = dt
 
@@ -263,7 +264,7 @@ class Swing:
 
                     spl = self.spl
                     self.spl = self.spl_dt = None
-                    self.__bars_since = 0
+                    self.bars_since = 0
 
                     if (
                         self.retrace_threshold
@@ -299,7 +300,7 @@ class Swing:
                     return
 
             if self.low and low < self.low:
-                self.__bars_since = 0
+                self.bars_since = 0
                 self.low = low
                 self.high = high
                 self.low_dt = self.high_dt = dt
@@ -309,7 +310,7 @@ class Swing:
                     self.spl = self.low
                     self.spl_dt = self.low_dt
                     self.high = self.high_dt = None
-                    self.__bars_since = 1  # reset but count the current bar
+                    self.bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
                         f"{dt}: Swing Low - DOWN SPL: {self.spl} CoCh: {self.coc}"
@@ -340,7 +341,7 @@ class Swing:
             self.high_dt
         ) = self.low_dt = self.coc_dt = self.sph_dt = self.spl_dt = None
 
-        self.__bars_since = 0
+        self.bars_since = 0
 
         if self.plot:
             self.df = None
@@ -396,7 +397,7 @@ class Swing:
         self.high = self.sph = self.sph_dt = None
         self.low = low
         self.low_dt = dt
-        self.__bars_since = 0
+        self.bars_since = 0
 
         if self.plot:
             line_end_dt = self.__line_end_dt(self.coc_dt)
@@ -421,7 +422,7 @@ class Swing:
         self.low = self.spl = self.spl_dt = None
         self.high = high
         self.high_dt = dt
-        self.__bars_since = 0
+        self.bars_since = 0
 
         if self.plot:
             line_end_dt = self.__line_end_dt(self.coc_dt)
