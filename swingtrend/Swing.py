@@ -2,10 +2,6 @@ import logging
 from datetime import datetime
 from typing import Callable, Literal, Optional
 
-# logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
-#
-# logger = logging.getLogger(__name__)
-
 
 class Swing:
     """
