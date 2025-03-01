@@ -196,12 +196,10 @@ class Swing:
 
                     if self.on_breakout:
                         self.on_breakout(
-                            self.symbol,
-                            dt,
-                            self.trend,
-                            close,
-                            sph,
-                            self.coc,
+                            self,
+                            date=dt,
+                            close=close,
+                            breakout_level=sph,
                         )
                     return
 
@@ -233,12 +231,10 @@ class Swing:
 
                     if self.on_reversal:
                         self.on_reversal(
-                            self.symbol,
-                            dt,
-                            self.trend,
-                            close,
-                            self.coc,
-                            price_level,
+                            self,
+                            date=dt,
+                            close=close,
+                            reversal_level=price_level,
                         )
             return
 
@@ -290,12 +286,10 @@ class Swing:
 
                     if self.on_breakout:
                         self.on_breakout(
-                            self.symbol,
-                            dt,
-                            self.trend,
-                            close,
-                            spl,
-                            self.coc,
+                            self,
+                            date=dt,
+                            close=close,
+                            breakout_level=spl,
                         )
                     return
 
@@ -326,12 +320,10 @@ class Swing:
 
                     if self.on_reversal:
                         self.on_reversal(
-                            self.symbol,
-                            dt,
-                            self.trend,
-                            close,
-                            self.coc,
-                            price_level,
+                            self,
+                            date=dt,
+                            close=close,
+                            reversal_level=price_level,
                         )
 
     def reset(self):
