@@ -148,10 +148,13 @@ class Swing:
             return
 
         if self.trend == "UP":
-            if self.sph:
-                self.__bars_since += 1
+            # Increment bar count on every bar
+            # Reset count, if SPH is broken or reversal to downtrend
+            # or new highs are being formed.
+            self.__bars_since += 1
 
                 if self.high and high > self.high:
+                    self.__bars_since = 0
                     self.high = high
                     self.high_dt = dt
 
@@ -202,6 +205,7 @@ class Swing:
                     return
 
             if self.high and high > self.high:
+                self.__bars_since = 0
                 self.high = high
                 self.high_dt = dt
                 self.low = low
@@ -212,7 +216,7 @@ class Swing:
                     self.sph = self.high
                     self.sph_dt = self.high_dt
                     self.low = self.low_dt = None
-                    self.__bars_since = 0
+                    self.__bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
                         f"{dt}: Swing High - UP SPH: {self.sph} CoCh: {self.coc}"
@@ -221,7 +225,6 @@ class Swing:
                 if self.low is None or low < self.low:
                     self.low = low
                     self.low_dt = dt
-                    self.__bars_since += 1
 
                 if self.coc and close < self.coc:
                     price_level = self.coc
@@ -239,10 +242,15 @@ class Swing:
             return
 
         if self.trend == "DOWN":
+            # Increment bar count on every bar
+            # Reset count, if SPL is broken or reversal to downtrend
+            # or new lows are being formed.
+            self.__bars_since += 1
+
             if self.spl:
-                self.__bars_since += 1
 
                 if self.low and low < self.low:
+                    self.__bars_since = 0
                     self.low = low
                     self.low_dt = dt
 
@@ -291,6 +299,7 @@ class Swing:
                     return
 
             if self.low and low < self.low:
+                self.__bars_since = 0
                 self.low = low
                 self.high = high
                 self.low_dt = self.high_dt = dt
@@ -300,7 +309,7 @@ class Swing:
                     self.spl = self.low
                     self.spl_dt = self.low_dt
                     self.high = self.high_dt = None
-                    self.__bars_since = 0
+                    self.__bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
                         f"{dt}: Swing Low - DOWN SPL: {self.spl} CoCh: {self.coc}"
@@ -309,7 +318,6 @@ class Swing:
                 if self.high is None or high > self.high:
                     self.high = high
                     self.high_dt = dt
-                    self.__bars_since += 1
 
                 if self.coc and close > self.coc:
                     price_level = self.coc
