@@ -12,68 +12,42 @@ Python version: >= 3.8
 
 No external dependencies are required.
 
-Pandas and Mplfinance are optional requirements depending on your usage and requirement.
+Pandas and Mplfinance are optional requirements depending on your usage and requirements.
 
-See this youtube video: [How To Understand Market Structure](https://www.youtube.com/watch?v=Pd9ASRCHWmQ&t=251)
+Introduction:
+=============
 
-.. code-block:: python
 
-  Uptrend Continuation
+The ``Swing`` class works on the same principles of **Higher Highs** and **Higher Lows** (in an uptrend) and **Lower Lows** and **Lower Highs** (in a downtrend).
 
-                 /
-  _____________ /<-- Break of Structure (BOS)
-  \ MARKET     /       (Breakout level)
-   \STRUCTURE /
-    \  /\    /
-     \/  \  /
-          \/______<--- Change of Structure (CoCh)
-                        (Reversal level)
+.. image:: images/hh_hl.png
 
-.. code-block:: python
+Within the class,
 
-   Downtrend Continuation
+- Higher Highs and Lower Lows are called **Swing Point High (SPH)** and **Swing Point Low (SPL)**.
+- Higher Lows and Lower Highs are called **Change of Character (Coc or CoCh)**.
 
-            ______________<--- Change of Structure (CoCh)
-           /\                   (Reversal Level)
-          /  \  /\
-         /    \/  \
-   \    / Market   \
-    \  / Structure  \
-     \/______________\
-                      \<--- Break of Structure (BOS)
-                       \        (Breakout level)
+When the price closes above the SPH, the uptrend is confirmed.
 
-.. code-block:: python
+When the price closes below the SPL, the downtrend is confirmed.
 
-   Reversal to Downtrend
+ SPH forms in uptrends, while SPL forms in downtrends.
 
-                    /\-> Uptrend
-    _______________/__\___ <-- BOS
-    /\ MARKET     /    \
-   /  \STRUCTURE /      \  /\
-  /    \  /\    /        \/  \
-        \/  \  /              \
-             \/________________\__ <-- CoCh (Breakdown)
-                                \
-                                 \ <-- Reversal to downtrend
+Each time the price closes above the SPH, a new CoCh price forms. Vice versa when the price closes below SPL.
 
-.. code-block:: python
+  CoCh can act as an effective trailing stop to protect gains on trade positions.
 
-   Reversal to Uptrend
+In an uptrend, CoCh is the lowest point between the SPH and the candle that closes above the SPH.
 
-                                   /<-- Reversal to uptrend
-          ________________________/__
-         /\                      /   <-- CoCh (Breakout)
-        /  \  /\                /
-       /    \/  \          /\  /
- \    / Market   \        /  \/
-  \  / Structure  \      /
-   \/______________\___ /___ <-- BOS
-                    \  /
-                     \/ <-- Downtrend
+In a downtrend, CoCh is the highest point between the SPL and the candle that closes below the SPL.
 
+.. image:: images/line-structure.png
+
+
+See this youtube video: `How To Understand Market Structure <https://www.youtube.com/watch?v=Pd9ASRCHWmQ&t=251>`_ for a deeper understanding.
 
 .. toctree::
 
    usage
    swing_algorithm
+   API_reference
