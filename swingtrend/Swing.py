@@ -7,16 +7,6 @@ class Swing:
     """
     A class to help determine the current trend of an Stock.
 
-    ``Swing.trend: str or None`` - A string indicating the current trend. UP or DOWN or None. Trend will be None if too few candles were provided.
-
-    ``Swing.sph: float or None`` - Swing high indicating the current breakout level to maintain uptrend. If trend is DOWN or None, SPH is None
-
-    ``Swing.spl: float or None`` - Swing low indicating the current breakdown level to maintain downtrend. If trend is UP or None, SPL is None
-
-    ``Swing.sph_dt`` and ``Swing.spl_dt`` are the relevant dates for the current SPH and SPL in the DataFrame. They will be None if SPL or SPH is None.
-
-    ``Swing.coc: float or None`` - Change of Character (CoCh) or Reversal level. If this level is broken, current trend will be reversed.
-
     :param retrace_threshold_pct: Default 5.0. Minimum retracement required to qualify a Change of Character (CoCh) level. If None, all retracements qualify.
     :type retrace_threshold_pct: float or None
     :param sideways_threshold: Default 20. Minimum number of bars after which the trend is considered range-bound or sideways.
@@ -64,7 +54,7 @@ class Swing:
 
         **Note** ``swing.trend`` can be UP or DOWN and still be sideways. The trend only changes on Break of structure or reversal (break of CoCh).
 
-        The instrument is considered sideways, if the number of bars since the last SPH or SPL was formed exceeds 20
+        The instrument is considered sideways, if the number of bars since the last SPH or SPL was formed exceeds ``Swing.sideways_threshold``
 
         If a break of structure occurs or a trend reversal the bar count is reset to 0 until a new SPH or SPL is formed.
         """
