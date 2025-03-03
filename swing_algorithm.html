@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Usage" href="usage.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="API_reference.html" /><link rel="prev" title="Usage" href="usage.html" />
 
     <!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
         <title>Swing Algorithm - SwingTrend 1.0.2 documentation</title>
@@ -201,6 +201,7 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Swing Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="API_reference.html">API Reference</a></li>
 </ul>
 
 </div>
@@ -246,33 +247,33 @@
 <section id="using-a-chart-example">
 <h2>Using a Chart Example<a class="headerlink" href="#using-a-chart-example" title="Link to this heading">¶</a></h2>
 <img alt="_images/swing-illustration-1.png" src="_images/swing-illustration-1.png" />
-<p>Refering to the image and the counts marked therein,</p>
+<p>Referring to the image and the counts marked therein,</p>
 <ol class="arabic simple">
 <li><p>This is the first bar. The current trend is None. We mark the high and low of the bar.</p></li>
-<li><p>Bar breaks to the downside. The trend is now set to DOWN. The second bar marks a new low.</p></li>
+<li><p>The Bar breaks to the downside. The trend is DOWN. The second bar marks a new low.</p></li>
 <li><p>Bar 3 continues to make new lows.</p></li>
-<li><p>At 4, the bar failed to make a new low. Bar 3 low (Yellow line) is marked as a Swing Point Low (SPL). We keep track of the high being made. The next bar makes a new high point at 157.75 (line marked Red) which is the highest point reached.</p></li>
-<li><p>Bar marked 5 closes below the SPL. This results in Break Of Structure (BOS). A BOS confirms the current downtrend. At this point, the high point of 157.75 is marked as Change of Character (CoCH) level.</p></li>
+<li><p>At 4, the bar failed to make a new low. Bar 3 low (Yellow line) becomes as a Swing Point Low (SPL). We keep track of the high being made. The next bar makes a new high point at 157.75 (line marked Red), the highest point reached.</p></li>
+<li><p>Bar marked 5, closes below the SPL. It results in a Break Of Structure (BOS). A BOS confirms the current downtrend. The high point of 157.75 is the Change of Character (CoCH) level.</p></li>
 </ol>
 <blockquote>
-<div><p>CoCh marks the reversal level. If this level is broken, it results in reversal of trend.</p>
+<div><p>CoCh marks the reversal level. If this level breaks, it results in a reversal of trend.</p>
 </div></blockquote>
 <ol class="arabic simple" start="6">
-<li><p>At 6, we see another new SPL level, followed by a Break of Structure (BOS), which create a new CoCh level at 151.8.</p></li>
-<li><p>At 7, the CoCh level of 151.8 is broken with a close above. The trend has now reversed and marked as UP. The lowest point of 130.25 is marked as new CoCh level.</p></li>
+<li><p>At 6, we see another new SPL level, followed by a Break of Structure (BOS), which creates a new CoCh level at 151.8.</p></li>
+<li><p>At 7, the CoCh level 151.8 is broken with a close above. The trend has now reversed and marked as UP. 130.25 is the lowest point and marks the new CoCh level.</p></li>
 </ol>
 </section>
 <section id="in-summary">
 <h2>In Summary:<a class="headerlink" href="#in-summary" title="Link to this heading">¶</a></h2>
 <p><strong>In an uptrend,</strong></p>
 <ul class="simple">
-<li><p>When a bar fails to make new high, the most recent high is marked a Swing Point High (SPH).</p></li>
+<li><p>When a bar fails to make a new high, the most recent high is marked as a Swing Point High (SPH).</p></li>
 <li><p>CoCh is the lowest retracement point between the SPH high and the BOS (breakout bar).</p></li>
 <li><p>CoCh is only confirmed when the bar closes above the SPH high.</p></li>
 </ul>
 <p><strong>In a downtrend,</strong></p>
 <ul class="simple">
-<li><p>When a bar fails to make new low, the most recent low is marked a Swing Point Low (SPL).</p></li>
+<li><p>When a bar fails to make a new low, the most recent low is marked as a Swing Point Low (SPL).</p></li>
 <li><p>CoCh is the highest retracement point between the SPL low and the BOS (breakdown bar).</p></li>
 <li><p>CoCh is only confirmed when the bar closes below the SPL.</p></li>
 </ul>
@@ -281,26 +282,25 @@
 <h2>Another explanation<a class="headerlink" href="#another-explanation" title="Link to this heading">¶</a></h2>
 <img alt="_images/swing-no-retrace-pct.png" src="_images/swing-no-retrace-pct.png" />
 <p>Upon initialization, the trend is None.</p>
-<p>On the first candle, the high and low are marked as swing high and swing low.</p>
-<p>On subsequent candles, if either side breaks, the trend direction is set:</p>
+<p>On the first candle, the high and low marks the current high and low.</p>
+<p>The trend is set by whichever candle breaks the high or low of the first candle.</p>
 <ul class="simple">
-<li><p>If the low is broken, the trend is DOWN, and the high is marked as COC (Change of Character).</p></li>
-<li><p>If the high is broken, the trend is UP, and the low is marked as COC.</p></li>
+<li><p>If the low breaks, the trend is DOWN, and the high is the COC (Change of Character).</p></li>
+<li><p>If the high breaks, the trend is UP, and the low is the COC.</p></li>
 </ul>
-<p>Once the trend is set, every new high or low in the direction of the trend is marked as a
-<strong>swing high</strong> or <strong>swing low</strong> (in the Swing class, self.high and self.low).</p>
+<p>Once the trend is confirmed, every new high or low in the trend direction is the highest high or lowest low. (In the class, it is the <code class="docutils literal notranslate"><span class="pre">Swing.high</span></code> and <code class="docutils literal notranslate"><span class="pre">Swing.low</span></code>)</p>
 <p>If a candle fails to make a new high or new low in the direction of the trend,
-the unbroken high or low is marked as a <strong>SPH (Swing Point High)</strong> or
+the unbroken high or low is a <strong>SPH (Swing Point High)</strong> or
 <strong>SPL (Swing Point Low)</strong>.</p>
-<p>When an SPH or SPL level is broken by a candle close, it is called a <strong>Break of Structure (BOS)</strong>.</p>
+<p>Any time a candle’s close breaks an SPH or SPL level, it is called a <strong>Break of Structure (BOS)</strong>.</p>
 <blockquote>
 <div><p>A Break of Structure (BOS) confirms the existing trend direction.</p>
 </div></blockquote>
 <ul>
-<li><p>When an SPH is broken, the lowest retracement point is marked as CoCh.</p></li>
-<li><p>When an SPL is broken, the highest retracement point is marked as CoCh.</p>
+<li><p>When an SPH breaks on a closing basis, the lowest retracement point is marked as CoCh.</p></li>
+<li><p>When an SPL breaks on a closing basis, the highest retracement point is marked as CoCh.</p>
 <blockquote>
-<div><p>If COC is broken by a candle close, it confirms a reversal in trend.</p>
+<div><p>If COC breaks on a closing basis, it confirms a reversal in trend.</p>
 </div></blockquote>
 </li>
 </ul>
@@ -308,7 +308,7 @@ the unbroken high or low is marked as a <strong>SPH (Swing Point High)</strong> 
 <section id="retrace-threshold-percent">
 <h2>Retrace Threshold percent<a class="headerlink" href="#retrace-threshold-percent" title="Link to this heading">¶</a></h2>
 <img alt="_images/retrace_pct-illustration.png" src="_images/retrace_pct-illustration.png" />
-<p>The <code class="docutils literal notranslate"><span class="pre">retrace_threshold_pct</span></code> parameter is used to decide when a BOS is confirmed.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">retrace_threshold_pct</span></code> parameter decides when a BOS is confirmed.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">retrace_threshold_pct</span></code> is set to a percentage:</p>
 <ul class="simple">
 <li><p>A BOS is only confirmed if the price retraced below the threshold.</p></li>
@@ -320,18 +320,18 @@ regardless of retracement.</p>
 <p>Both methods have their advantages and disadvantages.</p>
 <p><strong>Why set a retrace_threshold_pct:</strong></p>
 <ul class="simple">
-<li><p>It is easier to trail profits on long term positions.</p></li>
-<li><p>Minor pivots or pullbacks will be ignored and you wont be stopped out on minor fluctuations of the market.</p></li>
+<li><p>It is easier to trail profits on long-term positions.</p></li>
+<li><p>Minor pivots or pullbacks will be ignored and you won’t be stopped by minor fluctuations in the market.</p></li>
 </ul>
-<p>In strong uptrends, the retracements may be shallow and there maybe no deep enough retracement. This is a potential downside of this method.</p>
-<p>The chart below uses a 8% retrace_threshold_pct. After the SPH is broken at 1292.1 (Marked in yellow), the stock goes into a tight uptrend channel with little to no retracement. In such cases, there is no new CoCh levels to trail your profit. The last CoCh level of 1109.45 is almost 43% down from the highs! For such cases, you need an alternative method to trail positions and protect your profits.</p>
+<p>In strong uptrends, the retracements may be shallow, and there maybe no retracement deep enough. This is a potential downside of this method.</p>
+<p>The chart below uses an 8% retrace_threshold_pct. After the SPH is broken at 1292.1 (Marked in yellow), the stock goes into a tight uptrend channel with little to no retracement. In such cases, there are no new CoCh levels to trail your profit. The last CoCh level of 1109.45 is almost 43% down from the highs! For such cases, you need an alternative method to trail positions and protect your profits.</p>
 <img alt="_images/swing-with-8-pct-retrace.png" src="_images/swing-with-8-pct-retrace.png" />
 <p><strong>Setting retrace_threshold_pct to None:</strong></p>
 <ul class="simple">
-<li><p>Useful for trailing stops on lower timeframe or even short term positions.</p></li>
+<li><p>Useful for trailing stops on lower timeframe or even short-term positions.</p></li>
 </ul>
 <p>In high volatility conditions, you are more likely to get stopped out by a minor pivot.</p>
-<p>See the image below. After the first SPH is broken with a gap up bar, the market retraces very close to the prior CoCh level.</p>
+<p>See the image below. After the first SPH is broken with a gap-up bar, the market retraces very close to the prior CoCh level.</p>
 <img alt="_images/swing-no-retrace-threshold.png" src="_images/swing-no-retrace-threshold.png" />
 </section>
 </section>
@@ -341,7 +341,15 @@ regardless of retracement.</p>
       <footer>
         
         <div class="related-pages">
-          
+          <a class="next-page" href="API_reference.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">API Reference</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
           <a class="prev-page" href="usage.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">

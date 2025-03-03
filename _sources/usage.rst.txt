@@ -24,7 +24,7 @@ Basic example
 
   swing = Swing(retrace_threshold_pct=5)
 
-  swing.run(sym="HDFCBANK", df=df)
+  swing.run(sym="HDFCBANK", df=df.iloc[-60:])
 
   print(f"{swing.symbol} - {swing.trend}")
 
@@ -49,7 +49,8 @@ Example showing how to plot lines in mplfinance
   swing = Swing(retrace_threshold_pct=8)
 
   # add `plot_lines=True`
-  swing.run(sym, df, plot_lines=True)
+  # here we pass additional candles since it takes 40 candles to confirm the trend.
+  swing.run(sym, df.iloc[-160:], plot_lines=True)
 
   # Once swing.run completes,
   # swing.plot_lines provides the line coordinates
@@ -97,23 +98,3 @@ Debug mode is useful when trying to understand the program. Have a chart in fron
   logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
 
   swing = Swing(debug=True)
-
-API
-___
-
-.. autoclass:: swingtrend.Swing
-
-Methods
--------
-
-.. automethod:: swingtrend.Swing.run
-
-.. automethod:: swingtrend.Swing.identify
-
-.. automethod:: swingtrend.Swing.is_sideways
-
-.. automethod:: swingtrend.Swing.reset
-
-.. automethod:: swingtrend.Swing.pack
-
-.. automethod:: swingtrend.Swing.unpack

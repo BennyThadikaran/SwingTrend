@@ -201,6 +201,7 @@
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="swing_algorithm.html">Swing Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="API_reference.html">API Reference</a></li>
 </ul>
 
 </div>
@@ -246,80 +247,35 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">Swing</span></code> class uses a mechanical approach to determine the trend of a stock along with breakout and reversal levels.</p>
 <p>Python version: &gt;= 3.8</p>
 <p>No external dependencies are required.</p>
-<p>Pandas and Mplfinance are optional requirements depending on your usage and requirement.</p>
-<p>See this youtube video: [How To Understand Market Structure](<a class="reference external" href="https://www.youtube.com/watch?v=Pd9ASRCHWmQ&amp;t=251">https://www.youtube.com/watch?v=Pd9ASRCHWmQ&amp;t=251</a>)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Uptrend</span> <span class="n">Continuation</span>
-
-               <span class="o">/</span>
-<span class="n">_____________</span> <span class="o">/&lt;--</span> <span class="n">Break</span> <span class="n">of</span> <span class="n">Structure</span> <span class="p">(</span><span class="n">BOS</span><span class="p">)</span>
-\ <span class="n">MARKET</span>     <span class="o">/</span>       <span class="p">(</span><span class="n">Breakout</span> <span class="n">level</span><span class="p">)</span>
- \<span class="n">STRUCTURE</span> <span class="o">/</span>
-  \  <span class="o">/</span>\    <span class="o">/</span>
-   \<span class="o">/</span>  \  <span class="o">/</span>
-        \<span class="o">/</span><span class="n">______</span><span class="o">&lt;---</span> <span class="n">Change</span> <span class="n">of</span> <span class="n">Structure</span> <span class="p">(</span><span class="n">CoCh</span><span class="p">)</span>
-                      <span class="p">(</span><span class="n">Reversal</span> <span class="n">level</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Downtrend</span> <span class="n">Continuation</span>
-
-         <span class="n">______________</span><span class="o">&lt;---</span> <span class="n">Change</span> <span class="n">of</span> <span class="n">Structure</span> <span class="p">(</span><span class="n">CoCh</span><span class="p">)</span>
-        <span class="o">/</span>\                   <span class="p">(</span><span class="n">Reversal</span> <span class="n">Level</span><span class="p">)</span>
-       <span class="o">/</span>  \  <span class="o">/</span>\
-      <span class="o">/</span>    \<span class="o">/</span>  \
-\    <span class="o">/</span> <span class="n">Market</span>   \
- \  <span class="o">/</span> <span class="n">Structure</span>  \
-  \<span class="o">/</span><span class="n">______________</span>\
-                   \<span class="o">&lt;---</span> <span class="n">Break</span> <span class="n">of</span> <span class="n">Structure</span> <span class="p">(</span><span class="n">BOS</span><span class="p">)</span>
-                    \        <span class="p">(</span><span class="n">Breakout</span> <span class="n">level</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="n">Reversal</span> <span class="n">to</span> <span class="n">Downtrend</span>
-
-                  <span class="o">/</span>\<span class="o">-&gt;</span> <span class="n">Uptrend</span>
-  <span class="n">_______________</span><span class="o">/</span><span class="n">__</span>\<span class="n">___</span> <span class="o">&lt;--</span> <span class="n">BOS</span>
-  <span class="o">/</span>\ <span class="n">MARKET</span>     <span class="o">/</span>    \
- <span class="o">/</span>  \<span class="n">STRUCTURE</span> <span class="o">/</span>      \  <span class="o">/</span>\
-<span class="o">/</span>    \  <span class="o">/</span>\    <span class="o">/</span>        \<span class="o">/</span>  \
-      \<span class="o">/</span>  \  <span class="o">/</span>              \
-           \<span class="o">/</span><span class="n">________________</span>\<span class="n">__</span> <span class="o">&lt;--</span> <span class="n">CoCh</span> <span class="p">(</span><span class="n">Breakdown</span><span class="p">)</span>
-                              \
-                               \ <span class="o">&lt;--</span> <span class="n">Reversal</span> <span class="n">to</span> <span class="n">downtrend</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">Reversal</span> <span class="n">to</span> <span class="n">Uptrend</span>
-
-                                  <span class="o">/&lt;--</span> <span class="n">Reversal</span> <span class="n">to</span> <span class="n">uptrend</span>
-         <span class="n">________________________</span><span class="o">/</span><span class="n">__</span>
-        <span class="o">/</span>\                      <span class="o">/</span>   <span class="o">&lt;--</span> <span class="n">CoCh</span> <span class="p">(</span><span class="n">Breakout</span><span class="p">)</span>
-       <span class="o">/</span>  \  <span class="o">/</span>\                <span class="o">/</span>
-      <span class="o">/</span>    \<span class="o">/</span>  \          <span class="o">/</span>\  <span class="o">/</span>
-\    <span class="o">/</span> <span class="n">Market</span>   \        <span class="o">/</span>  \<span class="o">/</span>
- \  <span class="o">/</span> <span class="n">Structure</span>  \      <span class="o">/</span>
-  \<span class="o">/</span><span class="n">______________</span>\<span class="n">___</span> <span class="o">/</span><span class="n">___</span> <span class="o">&lt;--</span> <span class="n">BOS</span>
-                   \  <span class="o">/</span>
-                    \<span class="o">/</span> <span class="o">&lt;--</span> <span class="n">Downtrend</span>
-</pre></div>
-</div>
+<p>Pandas and Mplfinance are optional requirements depending on your usage and requirements.</p>
+</section>
+<section id="introduction">
+<h1>Introduction:<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Swing</span></code> class works on the same principles of <strong>Higher Highs</strong> and <strong>Higher Lows</strong> (in an uptrend) and <strong>Lower Lows</strong> and <strong>Lower Highs</strong> (in a downtrend).</p>
+<img alt="_images/hh_hl.png" src="_images/hh_hl.png" />
+<p>Within the class,</p>
+<ul class="simple">
+<li><p>Higher Highs and Lower Lows are called <strong>Swing Point High (SPH)</strong> and <strong>Swing Point Low (SPL)</strong>.</p></li>
+<li><p>Higher Lows and Lower Highs are called <strong>Change of Character (Coc or CoCh)</strong>.</p></li>
+</ul>
+<p>When the price closes above the SPH, the uptrend is confirmed.</p>
+<p>When the price closes below the SPL, the downtrend is confirmed.</p>
+<blockquote>
+<div><p>SPH forms in uptrends, while SPL forms in downtrends.</p>
+</div></blockquote>
+<p>Each time the price closes above the SPH, a new CoCh price forms. Vice versa when the price closes below SPL.</p>
+<blockquote>
+<div><p>CoCh can act as an effective trailing stop to protect gains on trade positions.</p>
+</div></blockquote>
+<p>In an uptrend, CoCh is the lowest point between the SPH and the candle that closes above the SPH.</p>
+<p>In a downtrend, CoCh is the highest point between the SPL and the candle that closes below the SPL.</p>
+<img alt="_images/line-structure.png" src="_images/line-structure.png" />
+<p>See this youtube video: <a class="reference external" href="https://www.youtube.com/watch?v=Pd9ASRCHWmQ&amp;t=251">How To Understand Market Structure</a> for a deeper understanding.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#examples">Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#api">API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="usage.html#swingtrend.Swing"><code class="docutils literal notranslate"><span class="pre">Swing</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#methods">Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#swingtrend.Swing.run"><code class="docutils literal notranslate"><span class="pre">Swing.run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#swingtrend.Swing.identify"><code class="docutils literal notranslate"><span class="pre">Swing.identify()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#swingtrend.Swing.is_sideways"><code class="docutils literal notranslate"><span class="pre">Swing.is_sideways()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#swingtrend.Swing.reset"><code class="docutils literal notranslate"><span class="pre">Swing.reset()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#swingtrend.Swing.pack"><code class="docutils literal notranslate"><span class="pre">Swing.pack()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#swingtrend.Swing.unpack"><code class="docutils literal notranslate"><span class="pre">Swing.unpack()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#examples">Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="swing_algorithm.html">Swing Algorithm</a><ul>
@@ -327,6 +283,19 @@
 <li class="toctree-l2"><a class="reference internal" href="swing_algorithm.html#in-summary">In Summary:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="swing_algorithm.html#another-explanation">Another explanation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="swing_algorithm.html#retrace-threshold-percent">Retrace Threshold percent</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="API_reference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="API_reference.html#swingtrend.Swing"><code class="docutils literal notranslate"><span class="pre">Swing</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="API_reference.html#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.run"><code class="docutils literal notranslate"><span class="pre">Swing.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.identify"><code class="docutils literal notranslate"><span class="pre">Swing.identify()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.is_sideways"><code class="docutils literal notranslate"><span class="pre">Swing.is_sideways()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.reset"><code class="docutils literal notranslate"><span class="pre">Swing.reset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.pack"><code class="docutils literal notranslate"><span class="pre">Swing.pack()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.unpack"><code class="docutils literal notranslate"><span class="pre">Swing.unpack()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
