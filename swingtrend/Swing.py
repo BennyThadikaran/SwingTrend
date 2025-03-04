@@ -220,10 +220,7 @@ class Swing:
                         line_end_dt = self.__line_end_dt(self.coc_dt)
 
                         self.plot_lines.append(
-                            (
-                                (self.coc_dt, self.coc),
-                                (line_end_dt, self.coc),
-                            )
+                            ((self.coc_dt, self.coc), (line_end_dt, self.coc))
                         )
                         self.plot_colors.append("g")
 
@@ -359,7 +356,7 @@ class Swing:
                             reversal_level=price_level,
                         )
 
-    def reset(self):
+    def reset(self) -> None:
         """Reset all properties. Used when switching to a different stock / symbol."""
 
         self.high = self.low = self.trend = self.coc = self.sph = self.spl = (
@@ -398,7 +395,7 @@ class Swing:
 
         return dct
 
-    def unpack(self, data: dict):
+    def unpack(self, data: dict) -> None:
         """
         Update the class with data from the dictionary.
 
