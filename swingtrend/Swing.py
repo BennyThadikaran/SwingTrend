@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 from typing import Callable, Literal, Optional
 
 
@@ -96,44 +95,55 @@ class Swing:
             if add_series and self.trend == "UP":
                 df.loc[dt, "TREND"] = 1
 
-    def identify(self, dt: datetime, high: float, low: float, close: float):
+    def identify(self, date, high: float, low: float, close: float) -> None:
         """
         Identify the trend with the current OHLC data.
+
+        :param date: datetime of the candle
+        :type date: str or datetime
+        :param high: Candle high
+        :type high: float
+        :param low: Candle low
+        :type low: float
+        :param close: Candle close
+        :type close: float
         """
         if self.trend is None:
             if self.high is None or self.low is None:
                 self.high = high
                 self.low = low
-                self.high_dt = self.low_dt = dt
-                self.logger.debug(f"{dt}: First Candle: High {high} Low: {low}")
+                self.high_dt = self.low_dt = date
+                self.logger.debug(
+                    f"{date}: First Candle: High {high} Low: {low}"
+                )
                 return
 
             # Set the trend when first bar high or low is broken
             if close > self.high:
                 self.trend = "UP"
                 self.high = high
-                self.high_dt = dt
+                self.high_dt = date
                 self.coc = self.low
                 self.coc_dt = self.low_dt
 
-                self.logger.debug(f"{dt}: Start Trend: UP High: {high}")
+                self.logger.debug(f"{date}: Start Trend: UP High: {high}")
 
             elif close < self.low:
                 self.trend = "DOWN"
                 self.low = low
-                self.low_dt = dt
+                self.low_dt = date
                 self.coc = self.high
                 self.coc_dt = self.high_dt
 
-                self.logger.debug(f"{dt}: Start Trend: DOWN Low: {low}")
+                self.logger.debug(f"{date}: Start Trend: DOWN Low: {low}")
 
             if high > self.high:
                 self.high = high
-                self.high_dt = dt
+                self.high_dt = date
 
             if low < self.low:
                 self.low = low
-                self.low_dt = dt
+                self.low_dt = date
 
             return
 
@@ -147,11 +157,11 @@ class Swing:
                 if self.high and high > self.high:
                     self.bars_since = 0
                     self.high = high
-                    self.high_dt = dt
+                    self.high_dt = date
 
                 if self.low is None or low < self.low:
                     self.low = low
-                    self.low_dt = dt
+                    self.low_dt = date
 
                 if close > self.sph:
                     retrace_pct = (self.low - self.sph) / self.sph
@@ -170,7 +180,7 @@ class Swing:
                     self.coc_dt = self.low_dt
 
                     self.logger.debug(
-                        f"{dt}: BOS UP CoCh: {self.coc} Retrace: {retrace_pct:.2%}"
+                        f"{date}: BOS UP CoCh: {self.coc} Retrace: {retrace_pct:.2%}"
                     )
 
                     if self.plot:
@@ -187,7 +197,7 @@ class Swing:
                     if self.on_breakout:
                         self.on_breakout(
                             self,
-                            date=dt,
+                            date=date,
                             close=close,
                             breakout_level=sph,
                         )
@@ -196,10 +206,10 @@ class Swing:
             if self.high and high > self.high:
                 self.bars_since = 0
                 self.high = high
-                self.high_dt = dt
+                self.high_dt = date
                 self.low = low
-                self.low_dt = dt
-                self.logger.debug(f"{dt}: New High: {high}")
+                self.low_dt = date
+                self.logger.debug(f"{date}: New High: {high}")
             else:
                 if self.sph is None:
                     self.sph = self.high
@@ -208,21 +218,21 @@ class Swing:
                     self.bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
-                        f"{dt}: Swing High - UP SPH: {self.sph} CoCh: {self.coc}"
+                        f"{date}: Swing High - UP SPH: {self.sph} CoCh: {self.coc}"
                     )
 
                 if self.low is None or low < self.low:
                     self.low = low
-                    self.low_dt = dt
+                    self.low_dt = date
 
                 if self.coc and close < self.coc:
                     price_level = self.coc
-                    self.__switch_downtrend(dt, low)
+                    self.__switch_downtrend(date, low)
 
                     if self.on_reversal:
                         self.on_reversal(
                             self,
-                            date=dt,
+                            date=date,
                             close=close,
                             reversal_level=price_level,
                         )
@@ -239,11 +249,11 @@ class Swing:
                 if self.low and low < self.low:
                     self.bars_since = 0
                     self.low = low
-                    self.low_dt = dt
+                    self.low_dt = date
 
                 if self.high is None or high > self.high:
                     self.high = high
-                    self.high_dt = dt
+                    self.high_dt = date
 
                 if close < self.spl:
                     retrace_pct = (self.high - self.spl) / self.spl
@@ -260,7 +270,7 @@ class Swing:
 
                     self.coc = self.high
                     self.coc_dt = self.high_dt
-                    self.logger.debug(f"{dt}: BOS DOWN CoCh: {self.coc}")
+                    self.logger.debug(f"{date}: BOS DOWN CoCh: {self.coc}")
 
                     if self.plot:
                         line_end_dt = self.__line_end_dt(self.coc_dt)
@@ -277,7 +287,7 @@ class Swing:
                     if self.on_breakout:
                         self.on_breakout(
                             self,
-                            date=dt,
+                            date=date,
                             close=close,
                             breakout_level=spl,
                         )
@@ -287,8 +297,8 @@ class Swing:
                 self.bars_since = 0
                 self.low = low
                 self.high = high
-                self.low_dt = self.high_dt = dt
-                self.logger.debug(f"{dt}: New Low: {low}")
+                self.low_dt = self.high_dt = date
+                self.logger.debug(f"{date}: New Low: {low}")
             else:
                 if self.spl is None:
                     self.spl = self.low
@@ -297,21 +307,21 @@ class Swing:
                     self.bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
-                        f"{dt}: Swing Low - DOWN SPL: {self.spl} CoCh: {self.coc}"
+                        f"{date}: Swing Low - DOWN SPL: {self.spl} CoCh: {self.coc}"
                     )
 
                 if self.high is None or high > self.high:
                     self.high = high
-                    self.high_dt = dt
+                    self.high_dt = date
 
                 if self.coc and close > self.coc:
                     price_level = self.coc
-                    self.__switch_uptrend(dt, high)
+                    self.__switch_uptrend(date, high)
 
                     if self.on_reversal:
                         self.on_reversal(
                             self,
-                            date=dt,
+                            date=date,
                             close=close,
                             reversal_level=price_level,
                         )
@@ -360,11 +370,11 @@ class Swing:
         """
         self.__dict__.update(data)
 
-    def __line_end_dt(self, dt):
+    def __line_end_dt(self, date):
         if self.df is None:
             raise ValueError("DataFrame not found.")
 
-        idx = self.df.index.get_loc(dt)
+        idx = self.df.index.get_loc(date)
 
         if isinstance(idx, slice):
             idx = idx.stop
@@ -372,14 +382,14 @@ class Swing:
         idx = min(int(idx) + 15, len(self.df) - 1)
         return self.df.index[idx]
 
-    def __switch_downtrend(self, dt: datetime, low: float):
+    def __switch_downtrend(self, date, low: float):
         self.trend = "DOWN"
         self.coc = self.high
         self.coc_dt = self.high_dt
         self.high = self.sph = self.sph_dt = None
         self.low = low
-        self.low_dt = dt
-        self.bars_since = 0
+        self.low_dt = date
+        self.__bars_since = 0
 
         if self.plot:
             line_end_dt = self.__line_end_dt(self.coc_dt)
@@ -394,17 +404,17 @@ class Swing:
             self.plot_colors.append("r")
 
         self.logger.debug(
-            f"{dt}: Reversal {self.trend} Low: {self.low} CoCh: {self.coc}"
+            f"{date}: Reversal {self.trend} Low: {self.low} CoCh: {self.coc}"
         )
 
-    def __switch_uptrend(self, dt: datetime, high: float):
+    def __switch_uptrend(self, date, high: float):
         self.trend = "UP"
         self.coc = self.low
         self.coc_dt = self.low_dt
         self.low = self.spl = self.spl_dt = None
         self.high = high
-        self.high_dt = dt
-        self.bars_since = 0
+        self.high_dt = date
+        self.__bars_since = 0
 
         if self.plot:
             line_end_dt = self.__line_end_dt(self.coc_dt)
@@ -416,5 +426,5 @@ class Swing:
             self.plot_colors.append("g")
 
         self.logger.debug(
-            f"{dt}: Reversal {self.trend} High: {self.high} CoCh: {self.coc}"
+            f"{date}: Reversal {self.trend} High: {self.high} CoCh: {self.coc}"
         )
