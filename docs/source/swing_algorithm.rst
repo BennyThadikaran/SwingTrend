@@ -26,7 +26,7 @@ Referring to the image and the counts marked therein,
 7. At 7, the CoCh level 151.8 is broken with a close above. The trend has now reversed and marked as UP. 130.25 is the lowest point and marks the new CoCh level.
 
 In Summary:
-===========
+-----------
 
 **In an uptrend,**
 
@@ -88,23 +88,25 @@ regardless of retracement.
 
 Both methods have their advantages and disadvantages.
 
-**Why set a retrace_threshold_pct:**
+Why set a retrace_threshold_pct:
+--------------------------------
 
 * It is easier to trail profits on long-term positions. 
 * Minor pivots or pullbacks will be ignored and you won't be stopped by minor fluctuations in the market.
 
 In strong uptrends, the retracements may be shallow, and there maybe no retracement deep enough. This is a potential downside of this method.
 
-The chart below uses an 8% retrace_threshold_pct. After the SPH is broken at 1292.1 (Marked in yellow), the stock goes into a tight uptrend channel with little to no retracement. In such cases, there are no new CoCh levels to trail your profit. The last CoCh level of 1109.45 is almost 43% down from the highs! For such cases, you need an alternative method to trail positions and protect your profits.
+.. figure:: images/swing-with-8-pct-retrace.png
 
-.. image:: images/swing-with-8-pct-retrace.png
+   This chart uses an 8% retrace threshold. After the SPH is broken at 1292.1 (Marked in yellow), the stock goes into a tight uptrend channel with little to no retracement. In such cases, there are no new CoCh levels to trail your profit. The last CoCh level of 1109.45 is almost 43% down from the highs! For such cases, you need an alternative method to trail positions and protect your profits.
 
-**Setting retrace_threshold_pct to None:**
+Setting retrace_threshold_pct to None:
+--------------------------------------
 
 * Useful for trailing stops on lower timeframe or even short-term positions.
 
 In high volatility conditions, you are more likely to get stopped out by a minor pivot. 
 
-See the image below. After the first SPH is broken with a gap-up bar, the market retraces very close to the prior CoCh level.
+.. figure:: images/swing-no-retrace-threshold.png
 
-.. image:: images/swing-no-retrace-threshold.png
+   After the first SPH is broken with a gap-up bar, the market retraces very close to the prior CoCh level.

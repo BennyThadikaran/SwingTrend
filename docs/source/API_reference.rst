@@ -1,3 +1,4 @@
+=============
 API Reference
 =============
 
@@ -6,7 +7,7 @@ API Reference
    :member-order: groupwise
 
 Swing Class Properties
-----------------------
+======================
 
 .. attribute:: on_reversal: Callable or None
 
@@ -78,8 +79,8 @@ Swing Class Properties
 
   The lowest price reached within the current structure. Reset to None, when SPH is formed or a trend reversal has occured.
 
-Note
-----
+Note regarding dates
+--------------------
 
 **Swing class does not perform any datetime operations**.
 
