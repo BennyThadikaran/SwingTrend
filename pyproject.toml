@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "SwingTrend"
-version = "1.0.2"
+version = "2.0.0"
 authors = [
   { name="Benny Thadikaran" },
 ]

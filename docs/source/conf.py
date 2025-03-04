@@ -15,7 +15,7 @@ sys.path.insert(0, src.as_posix())
 project = "SwingTrend"
 copyright = "2025, Benny Thadikaran"
 author = "Benny Thadikaran"
-release = "1.0.2"
+release = "2.0.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
