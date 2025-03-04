@@ -15,7 +15,7 @@ Referring to the image and the counts marked therein,
 
 3. Bar 3 continues to make new lows.
 
-4. At 4, the bar failed to make a new low. Bar 3 low (Yellow line) becomes as a Swing Point Low (SPL). We keep track of the high being made. The next bar makes a new high point at 157.75 (line marked Red), the highest point reached.
+4. At 4, the bar failed to make a new low. Bar 3 low (Yellow line) is a Swing Point Low (SPL). We keep track of the highs being made. The next bar makes a new high point at 157.75 (line marked Red), the highest point reached.
 
 5. Bar marked 5, closes below the SPL. It results in a Break Of Structure (BOS). A BOS confirms the current downtrend. The high point of 157.75 is the Change of Character (CoCH) level.
 
