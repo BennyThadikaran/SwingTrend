@@ -163,7 +163,9 @@ class TestSwingBarCount(unittest.TestCase):
     def test_uptrend_bar_below_sph(self):
         """Bar high below SPH. Bar count is incremented."""
 
-        self.swing.unpack(dict(trend="UP", sph=100, coc=90, bars_since=5))
+        self.swing.unpack(
+            dict(trend="UP", sph=100, coc=90, _Swing__bars_since=5)
+        )
 
         self.swing.identify(datetime(2024, 1, 1), high=98, low=95, close=96)
 
@@ -172,7 +174,9 @@ class TestSwingBarCount(unittest.TestCase):
     def test_downtrend_bar_above_spl(self):
         """Bar low above SPL. Bar count is incremented."""
 
-        self.swing.unpack(dict(trend="DOWN", spl=100, coc=110, bars_since=5))
+        self.swing.unpack(
+            dict(trend="DOWN", spl=100, coc=110, _Swing__bars_since=5)
+        )
 
         self.swing.identify(datetime(2024, 1, 1), high=105, low=102, close=102)
 
@@ -181,7 +185,9 @@ class TestSwingBarCount(unittest.TestCase):
     def test_uptrend_bar_above_spl(self):
         """Bar low above SPL. Bar count is incremented."""
 
-        self.swing.unpack(dict(trend="DOWN", spl=100, coc=110, bars_since=5))
+        self.swing.unpack(
+            dict(trend="DOWN", spl=100, coc=110, _Swing__bars_since=5)
+        )
 
         self.swing.identify(datetime(2024, 1, 1), high=105, low=102, close=102)
 

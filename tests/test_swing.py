@@ -52,7 +52,7 @@ class TestSwing(unittest.TestCase):
         dct = self.swing.pack()
         self.assertIsInstance(dct, dict)
 
-        # No callables or logger objects in dict
+        # No callables or unserializable objects in dict
         self.assertNotIn("on_reversal", dct)
         self.assertNotIn("on_breakout", dct)
         self.assertNotIn("logger", dct)
@@ -70,12 +70,16 @@ class TestSwing(unittest.TestCase):
             coc_dt="",
             sph_dt="",
             spl_dt="",
+            _Swing__bars_since=9,
+            df="",
         )
-
-        self.swing.bars_since = 9
 
         self.swing.unpack(data)
         self.swing.reset()
+
+        self.assertEqual(self.swing.bars_since, 0)
+
+        data.pop("_Swing__bars_since")
 
         for key in data.keys():
             self.assertIsNone(getattr(self.swing, key))
