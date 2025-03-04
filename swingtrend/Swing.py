@@ -364,7 +364,9 @@ class Swing:
 
         self.high = self.low = self.trend = self.coc = self.sph = self.spl = (
             self.high_dt
-        ) = self.low_dt = self.coc_dt = self.sph_dt = self.spl_dt = None
+        ) = self.low_dt = self.coc_dt = self.sph_dt = self.spl_dt = self.df = (
+            None
+        )
 
         self.__bars_since = 0
         self.__total_bar_count = 0
@@ -384,6 +386,9 @@ class Swing:
 
         # Remove non serializable objects
         del dct["logger"]
+
+        if "df" in dct:
+            del dct["df"]
 
         if "on_reversal" in dct:
             del dct["on_reversal"]
