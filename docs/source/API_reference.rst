@@ -1,63 +1,106 @@
 API Reference
 =============
 
-.. autoclass:: swingtrend.Swing
+.. automodule:: swingtrend
+   :members: Swing
+   :member-order: groupwise
 
-  .. attribute:: trend: str or None
+Swing Class Properties
+----------------------
 
-    The current trend as ``UP`` or ``DOWN``. Set to None, if too few candles were supplied.
+.. attribute:: on_reversal: Callable or None
 
-  .. attribute:: sph: float or None
+   A optional function or class method that is called when a trend reversal occurs.
 
-    The current swing point high. Set to None, if trend is Down or sph not yet formed.
 
-  .. attribute:: spl: float or None
+   **Swing.on_reversal** has the below signature:
 
-    The current swing point low. Set to None, if trend is UP or spl not yet formed.
+   ``def on_reversal(cls: Swing, date, close: float, reversal_level: float)``
 
-  .. attribute:: coc: float or None
+   Parameters:
 
-    Change of Character. It represents the trend reversal level. If trend is None, coc is None.
+   cls - The Swing class instance which provides access to all its properties and methods.
 
-  .. attribute:: high: float or None
+   date - The bar date on which the reversal occured.
 
-    The highest price reached within the current structure. Reset to None, when SPL is formed or a trend reversal has occured.
+   close - The closing price of the reversal bar.
 
-  .. attribute:: low: float or None
+   reversal_level - The coc price level that was broken.
 
-    The lowest price reached within the current structure. Reset to None, when SPH is formed or a trend reversal has occured.
 
-  .. attribute:: sph_dt: datetime or None
+.. attribute:: on_breakout: Callable or None
 
-    Date of SPH candle formation.
+   A optional function or class method that is called when a Break of Structure (BOS) or breakout/breakdown occurs.
 
-  .. attribute:: spl_dt: datetime or None
+   **Swing.on_breakout** has the below signature.
 
-    Date of SPL candle formation.
+   ``def on_breakout(cls: Swing, date, close: float, breakout_level: float)``
 
-  .. attribute:: coc_dt: datetime or None
+   Parameters:
 
-    Date of coc candle.
+   cls - The Swing class instance which provides access to all its properties and methods.
 
-  .. attribute:: low_dt: datetime or None
+   date - The bar date on which the breakout occured.
 
-    Candle date with lowest price in the current structure.
+   close - The closing price of the breakout bar.
 
-  .. attribute:: high_dt: datetime or None
+   breakout_level - The breakout price or SPH/SPL level that was broken.
 
-    Candle date with highest price in the current structure.
+.. attribute:: symbol: str or None
 
-Methods
--------
+   The current symbol name if passed during ``Swing.run``.
 
-.. automethod:: swingtrend.Swing.run
+.. attribute:: df: pandas.DataFrame or None
 
-.. automethod:: swingtrend.Swing.identify
+   pandas.DataFrame if passed during ``Swing.run``.
 
-.. automethod:: swingtrend.Swing.is_sideways
+.. attribute:: trend: str or None
 
-.. automethod:: swingtrend.Swing.reset
+  The current trend as ``UP`` or ``DOWN``. Set to None, if too few candles were supplied.
 
-.. automethod:: swingtrend.Swing.pack
+.. attribute:: sph: float or None
 
-.. automethod:: swingtrend.Swing.unpack
+  The current swing point high. Set to None, if trend is Down or sph not yet formed.
+
+.. attribute:: spl: float or None
+
+  The current swing point low. Set to None, if trend is UP or spl not yet formed.
+
+.. attribute:: coc: float or None
+
+  Change of Character. It represents the trend reversal level. If trend is None, coc is None.
+
+.. attribute:: high: float or None
+
+  The highest price reached within the current structure. Reset to None, when SPL is formed or a trend reversal has occured.
+
+.. attribute:: low: float or None
+
+  The lowest price reached within the current structure. Reset to None, when SPH is formed or a trend reversal has occured.
+
+Note
+----
+
+**Swing class does not perform any datetime operations**.
+
+All properties below are based on the input type. If you passed a str or timestamp or datetime, the same type is returned for the properties.
+
+.. attribute:: sph_dt: datetime or None
+
+  Date of SPH candle formation.
+
+.. attribute:: spl_dt: datetime or None
+
+  Date of SPL candle formation.
+
+.. attribute:: coc_dt: datetime or None
+
+  Date of coc candle.
+
+.. attribute:: low_dt: datetime or None
+
+  Candle date with lowest price in the current structure.
+
+.. attribute:: high_dt: datetime or None
+
+  Candle date with highest price in the current structure.
