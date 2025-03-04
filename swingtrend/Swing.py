@@ -100,10 +100,11 @@ class Swing:
         :type df: pandas.DataFrame
         :param plot_lines: Default False. Generate line data marking CoCh levels to plot in Matplotlib
         :type plot_lines: bool
-        :param add_series: Default False. If True, adds a `TREND` column to the DataFrame. 1 indicates UP, 0 indicates DOWN.
+        :param add_series: Default False. If True, adds a `TREND` and `IS_SIDEWAYS` column to the DataFrame. 1 if TREND is UP or in sideways range, 0 otherwise.
         :type add_series: bool
         """
         self.symbol = sym
+        self.df = df
 
         if plot_lines:
             self.plot = True
@@ -112,15 +113,18 @@ class Swing:
             self.df = df
 
         if add_series:
-            df["TREND"] = 0
+            df["TREND"] = None
+            df["IS_SIDEWAYS"] = None
 
         for t in df.itertuples(name=None):
             dt, _, H, L, C, *_ = t
 
             self.identify(dt, H, L, C)
 
-            if add_series and self.trend == "UP":
-                df.loc[dt, "TREND"] = 1
+            if add_series:
+                if self.is_trend_stable:
+                    df.loc[dt, "TREND"] = int(self.trend == "UP")
+                    df.loc[dt, "IS_SIDEWAYS"] = int(self.is_sideways)
 
     def identify(self, date, high: float, low: float, close: float) -> None:
         """
