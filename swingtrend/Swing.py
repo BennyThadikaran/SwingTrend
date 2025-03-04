@@ -10,6 +10,8 @@ class Swing:
     :type retrace_threshold_pct: float or None
     :param sideways_threshold: Default 20. Minimum number of bars after which the trend is considered range-bound or sideways.
     :type sideways_threshold: int
+    :param minimum_bar_count: Default 40. Minimum number of bars required to accurately determine trend.
+    :type minimum_bar_count: int
     :param debug: Default False. Print additional logs for debug purposes.
     :type debug: bool
     """
@@ -31,6 +33,7 @@ class Swing:
         self,
         retrace_threshold_pct: Optional[float] = 5.0,
         sideways_threshold: int = 20,
+        minimum_bar_count: int = 40,
         debug=False,
     ):
 
@@ -44,20 +47,44 @@ class Swing:
         if debug:
             self.logger.setLevel(logging.DEBUG)
 
-        self.plot = False
-        self.bars_since = 0
+        self.minimum_bar_count = minimum_bar_count
 
+        self.plot = False
+        self.__bars_since = 0
+        self.__total_bar_count = 0
+
+    @property
+    def bars_since(self) -> int:
+        """
+        Bar count since last swing high or low.
+
+        :type: int
+        """
+        return self.__bars_since
+
+    @property
+    def is_trend_stable(self) -> bool:
+        """
+        Have enough bars been accumulated to accurately determine the trend?
+
+        :type: bool
+        """
+        return self.__total_bar_count > self.minimum_bar_count
+
+    @property
     def is_sideways(self) -> bool:
         """
-        Returns True if the instrument is range bound or sideways trend.
-
-        **Note** ``swing.trend`` can be UP or DOWN and still be sideways. The trend only changes on Break of structure or reversal (break of CoCh).
+        Is the instrument range bound or in a sideways trend?
 
         The instrument is considered sideways, if the number of bars since the last SPH or SPL was formed exceeds ``Swing.sideways_threshold``
 
-        If a break of structure occurs or a trend reversal the bar count is reset to 0 until a new SPH or SPL is formed.
+        **Note** ``swing.trend`` can be UP or DOWN and still be sideways. The trend changes only on breakout or reversal.
+
+        If a breakout or trend reversal occurs, the bar count is reset to 0, until a new SPH or SPL is formed.
+
+        :type: bool
         """
-        return self.bars_since > self.sideways_threshold
+        return self.__bars_since > self.sideways_threshold
 
     def run(self, sym: str, df, plot_lines=False, add_series=False):
         """
@@ -108,6 +135,8 @@ class Swing:
         :param close: Candle close
         :type close: float
         """
+        self.__total_bar_count += 1
+
         if self.trend is None:
             if self.high is None or self.low is None:
                 self.high = high
@@ -151,11 +180,11 @@ class Swing:
             # Increment bar count on every bar
             # Reset count, if SPH is broken or reversal to downtrend
             # or new highs are being formed.
-            self.bars_since += 1
+            self.__bars_since += 1
 
             if self.sph:
                 if self.high and high > self.high:
-                    self.bars_since = 0
+                    self.__bars_since = 0
                     self.high = high
                     self.high_dt = date
 
@@ -168,7 +197,7 @@ class Swing:
 
                     sph = self.sph
                     self.sph = self.sph_dt = None
-                    self.bars_since = 0
+                    self.__bars_since = 0
 
                     if (
                         self.retrace_threshold
@@ -204,7 +233,7 @@ class Swing:
                     return
 
             if self.high and high > self.high:
-                self.bars_since = 0
+                self.__bars_since = 0
                 self.high = high
                 self.high_dt = date
                 self.low = low
@@ -215,7 +244,7 @@ class Swing:
                     self.sph = self.high
                     self.sph_dt = self.high_dt
                     self.low = self.low_dt = None
-                    self.bars_since = 1  # reset but count the current bar
+                    self.__bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
                         f"{date}: Swing High - UP SPH: {self.sph} CoCh: {self.coc}"
@@ -242,12 +271,12 @@ class Swing:
             # Increment bar count on every bar
             # Reset count, if SPL is broken or reversal to downtrend
             # or new lows are being formed.
-            self.bars_since += 1
+            self.__bars_since += 1
 
             if self.spl:
 
                 if self.low and low < self.low:
-                    self.bars_since = 0
+                    self.__bars_since = 0
                     self.low = low
                     self.low_dt = date
 
@@ -260,7 +289,7 @@ class Swing:
 
                     spl = self.spl
                     self.spl = self.spl_dt = None
-                    self.bars_since = 0
+                    self.__bars_since = 0
 
                     if (
                         self.retrace_threshold
@@ -294,7 +323,7 @@ class Swing:
                     return
 
             if self.low and low < self.low:
-                self.bars_since = 0
+                self.__bars_since = 0
                 self.low = low
                 self.high = high
                 self.low_dt = self.high_dt = date
@@ -304,7 +333,7 @@ class Swing:
                     self.spl = self.low
                     self.spl_dt = self.low_dt
                     self.high = self.high_dt = None
-                    self.bars_since = 1  # reset but count the current bar
+                    self.__bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
                         f"{date}: Swing Low - DOWN SPL: {self.spl} CoCh: {self.coc}"
@@ -333,7 +362,8 @@ class Swing:
             self.high_dt
         ) = self.low_dt = self.coc_dt = self.sph_dt = self.spl_dt = None
 
-        self.bars_since = 0
+        self.__bars_since = 0
+        self.__total_bar_count = 0
 
         if self.plot:
             self.df = None
