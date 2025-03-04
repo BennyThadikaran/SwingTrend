@@ -2,12 +2,10 @@
 <html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Usage" href="usage.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
 
-    <!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
-        <title>SwingTrend 2.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 --><title>Python Module Index - SwingTrend 2.0.0 documentation</title>
+<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
@@ -166,7 +164,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">SwingTrend 2.0.0 documentation</div></a>
+      <a href="index.html"><div class="brand">SwingTrend 2.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -178,7 +176,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -187,7 +185,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
   <span class="sidebar-brand-text">SwingTrend 2.0.0 documentation</span>
@@ -221,13 +219,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="view-this-page">
-  <a class="muted-link" href="_sources/index.rst.txt" title="View this page">
-    <svg><use href="#svg-eye"></use></svg>
-    <span class="visually-hidden">View this page</span>
-  </a>
-</div>
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -236,106 +228,38 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="swing-documentation">
-<h1>Swing documentation<a class="headerlink" href="#swing-documentation" title="Link to this heading">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">Swing</span></code> class uses a mechanical approach to determine the trend of a stock along with breakout and reversal levels.</p>
-<p>Python version: &gt;= 3.8</p>
-<p>No external dependencies are required.</p>
-<p>Pandas and Mplfinance are optional requirements depending on your usage and requirements.</p>
-<section id="introduction">
-<h2>Introduction:<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">Swing</span></code> class works on the same principles of <strong>Higher Highs</strong> and <strong>Higher Lows</strong> (in an uptrend) and <strong>Lower Lows</strong> and <strong>Lower Highs</strong> (in a downtrend).</p>
-<img alt="_images/hh_hl.png" src="_images/hh_hl.png" />
-<p>Within the class,</p>
-<ul class="simple">
-<li><p>Higher Highs and Lower Lows are called <strong>Swing Point High (SPH)</strong> and <strong>Swing Point Low (SPL)</strong>.</p></li>
-<li><p>Higher Lows and Lower Highs are called <strong>Change of Character (Coc or CoCh)</strong>.</p></li>
-</ul>
-<p>When the price closes above the SPH, the uptrend is confirmed.</p>
-<p>When the price closes below the SPL, the downtrend is confirmed.</p>
-<blockquote>
-<div><p>SPH forms in uptrends, while SPL forms in downtrends.</p>
-</div></blockquote>
-<p>Each time the price closes above the SPH, a new CoCh price forms. Vice versa when the price closes below SPL.</p>
-<blockquote>
-<div><p>CoCh can act as an effective trailing stop to protect gains on trade positions.</p>
-</div></blockquote>
-<p>In an uptrend, CoCh is the lowest point between the SPH and the candle that closes above the SPH.</p>
-<p>In a downtrend, CoCh is the highest point between the SPL and the candle that closes below the SPL.</p>
-<img alt="_images/line-structure.png" src="_images/line-structure.png" />
-<p>See this youtube video: <a class="reference external" href="https://www.youtube.com/watch?v=Pd9ASRCHWmQ&amp;t=251">How To Understand Market Structure</a> for a deeper understanding.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#examples">Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#basic-example">Basic example</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#screening-stocks">Screening stocks</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#attaching-callback-functions">Attaching callback functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#plot-with-mplfinance">Plot with mplfinance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#using-swing-identify">Using <code class="docutils literal notranslate"><span class="pre">Swing.identify</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#debug-mode">Debug Mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage.html#adding-a-series-to-pandas-dataframe">Adding a series to Pandas DataFrame</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="swing_algorithm.html">Swing Algorithm</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="swing_algorithm.html#using-a-chart-example">Using a Chart Example</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="swing_algorithm.html#in-summary">In Summary:</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="swing_algorithm.html#another-explanation">Another explanation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swing_algorithm.html#retrace-threshold-percent">Retrace Threshold percent</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="swing_algorithm.html#why-set-a-retrace-threshold-pct">Why set a retrace_threshold_pct:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="swing_algorithm.html#setting-retrace-threshold-pct-to-none">Setting retrace_threshold_pct to None:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="API_reference.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="API_reference.html#swingtrend.Swing"><code class="docutils literal notranslate"><span class="pre">Swing</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.identify"><code class="docutils literal notranslate"><span class="pre">Swing.identify()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.pack"><code class="docutils literal notranslate"><span class="pre">Swing.pack()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.reset"><code class="docutils literal notranslate"><span class="pre">Swing.reset()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.run"><code class="docutils literal notranslate"><span class="pre">Swing.run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.unpack"><code class="docutils literal notranslate"><span class="pre">Swing.unpack()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.bars_since"><code class="docutils literal notranslate"><span class="pre">Swing.bars_since</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.is_sideways"><code class="docutils literal notranslate"><span class="pre">Swing.is_sideways</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="API_reference.html#swingtrend.Swing.is_trend_stable"><code class="docutils literal notranslate"><span class="pre">Swing.is_trend_stable</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="API_reference.html#swing-class-properties">Swing Class Properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="API_reference.html#note-regarding-dates">Note regarding dates</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
+          
+<section class="domainindex-section">
+  <h1>Python Module Index</h1>
+  <div class="domainindex-jumpbox"><a href="#cap-s"><strong>s</strong></a></div>
 </section>
-</section>
+<table class="domainindex-table">
+  <tr class="pcap">
+    <td></td><td>&#160;</td><td></td>
+  </tr>
+  <tr class="cap" id="cap-s">
+    <td></td><td><strong>s</strong></td><td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+        <a href="API_reference.html#module-swingtrend"><code class="xref">swingtrend</code></a></td><td>
+    <em></em></td>
+  </tr>
+</table>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="usage.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Usage</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
+          
           
         </div>
         <div class="bottom-of-page">
@@ -355,27 +279,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Swing documentation</a><ul>
-<li><a class="reference internal" href="#introduction">Introduction:</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
@@ -384,5 +289,6 @@
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
-    </body>
+    
+    <script>DOCUMENTATION_OPTIONS.COLLAPSE_INDEX = true</script></body>
 </html>

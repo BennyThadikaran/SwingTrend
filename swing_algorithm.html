@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="API_reference.html" /><link rel="prev" title="Usage" href="usage.html" />
 
     <!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
-        <title>Swing Algorithm - SwingTrend 1.0.2 documentation</title>
+        <title>Swing Algorithm - SwingTrend 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">SwingTrend 1.0.2 documentation</div></a>
+      <a href="index.html"><div class="brand">SwingTrend 2.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">SwingTrend 1.0.2 documentation</span>
+  <span class="sidebar-brand-text">SwingTrend 2.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -252,7 +252,7 @@
 <li><p>This is the first bar. The current trend is None. We mark the high and low of the bar.</p></li>
 <li><p>The Bar breaks to the downside. The trend is DOWN. The second bar marks a new low.</p></li>
 <li><p>Bar 3 continues to make new lows.</p></li>
-<li><p>At 4, the bar failed to make a new low. Bar 3 low (Yellow line) becomes as a Swing Point Low (SPL). We keep track of the high being made. The next bar makes a new high point at 157.75 (line marked Red), the highest point reached.</p></li>
+<li><p>At 4, the bar failed to make a new low. Bar 3 low (Yellow line) is a Swing Point Low (SPL). We keep track of the highs being made. The next bar makes a new high point at 157.75 (line marked Red), the highest point reached.</p></li>
 <li><p>Bar marked 5, closes below the SPL. It results in a Break Of Structure (BOS). A BOS confirms the current downtrend. The high point of 157.75 is the Change of Character (CoCH) level.</p></li>
 </ol>
 <blockquote>
@@ -262,9 +262,8 @@
 <li><p>At 6, we see another new SPL level, followed by a Break of Structure (BOS), which creates a new CoCh level at 151.8.</p></li>
 <li><p>At 7, the CoCh level 151.8 is broken with a close above. The trend has now reversed and marked as UP. 130.25 is the lowest point and marks the new CoCh level.</p></li>
 </ol>
-</section>
 <section id="in-summary">
-<h2>In Summary:<a class="headerlink" href="#in-summary" title="Link to this heading">¶</a></h2>
+<h3>In Summary:<a class="headerlink" href="#in-summary" title="Link to this heading">¶</a></h3>
 <p><strong>In an uptrend,</strong></p>
 <ul class="simple">
 <li><p>When a bar fails to make a new high, the most recent high is marked as a Swing Point High (SPH).</p></li>
@@ -277,6 +276,7 @@
 <li><p>CoCh is the highest retracement point between the SPL low and the BOS (breakdown bar).</p></li>
 <li><p>CoCh is only confirmed when the bar closes below the SPL.</p></li>
 </ul>
+</section>
 </section>
 <section id="another-explanation">
 <h2>Another explanation<a class="headerlink" href="#another-explanation" title="Link to this heading">¶</a></h2>
@@ -318,21 +318,33 @@ before the SPH is broken. If not, the BOS is ignored.</p></li>
 <p>If <code class="docutils literal notranslate"><span class="pre">retrace_threshold_pct</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, anytime an SPH is broken, it is treated as a BOS
 regardless of retracement.</p>
 <p>Both methods have their advantages and disadvantages.</p>
-<p><strong>Why set a retrace_threshold_pct:</strong></p>
+<section id="why-set-a-retrace-threshold-pct">
+<h3>Why set a retrace_threshold_pct:<a class="headerlink" href="#why-set-a-retrace-threshold-pct" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>It is easier to trail profits on long-term positions.</p></li>
 <li><p>Minor pivots or pullbacks will be ignored and you won’t be stopped by minor fluctuations in the market.</p></li>
 </ul>
 <p>In strong uptrends, the retracements may be shallow, and there maybe no retracement deep enough. This is a potential downside of this method.</p>
-<p>The chart below uses an 8% retrace_threshold_pct. After the SPH is broken at 1292.1 (Marked in yellow), the stock goes into a tight uptrend channel with little to no retracement. In such cases, there are no new CoCh levels to trail your profit. The last CoCh level of 1109.45 is almost 43% down from the highs! For such cases, you need an alternative method to trail positions and protect your profits.</p>
+<figure class="align-default" id="id1">
 <img alt="_images/swing-with-8-pct-retrace.png" src="_images/swing-with-8-pct-retrace.png" />
-<p><strong>Setting retrace_threshold_pct to None:</strong></p>
+<figcaption>
+<p><span class="caption-text">This chart uses an 8% retrace threshold. After the SPH is broken at 1292.1 (Marked in yellow), the stock goes into a tight uptrend channel with little to no retracement. In such cases, there are no new CoCh levels to trail your profit. The last CoCh level of 1109.45 is almost 43% down from the highs! For such cases, you need an alternative method to trail positions and protect your profits.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="setting-retrace-threshold-pct-to-none">
+<h3>Setting retrace_threshold_pct to None:<a class="headerlink" href="#setting-retrace-threshold-pct-to-none" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Useful for trailing stops on lower timeframe or even short-term positions.</p></li>
 </ul>
 <p>In high volatility conditions, you are more likely to get stopped out by a minor pivot.</p>
-<p>See the image below. After the first SPH is broken with a gap-up bar, the market retraces very close to the prior CoCh level.</p>
+<figure class="align-default" id="id2">
 <img alt="_images/swing-no-retrace-threshold.png" src="_images/swing-no-retrace-threshold.png" />
+<figcaption>
+<p><span class="caption-text">After the first SPH is broken with a gap-up bar, the market retraces very close to the prior CoCh level.</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
 </section>
 </section>
 
@@ -392,10 +404,16 @@ regardless of retracement.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Swing Algorithm</a><ul>
-<li><a class="reference internal" href="#using-a-chart-example">Using a Chart Example</a></li>
+<li><a class="reference internal" href="#using-a-chart-example">Using a Chart Example</a><ul>
 <li><a class="reference internal" href="#in-summary">In Summary:</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#another-explanation">Another explanation</a></li>
-<li><a class="reference internal" href="#retrace-threshold-percent">Retrace Threshold percent</a></li>
+<li><a class="reference internal" href="#retrace-threshold-percent">Retrace Threshold percent</a><ul>
+<li><a class="reference internal" href="#why-set-a-retrace-threshold-pct">Why set a retrace_threshold_pct:</a></li>
+<li><a class="reference internal" href="#setting-retrace-threshold-pct-to-none">Setting retrace_threshold_pct to None:</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -407,7 +425,7 @@ regardless of retracement.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=1ed6394b"></script>
+</div><script src="_static/documentation_options.js?v=51b770b3"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>

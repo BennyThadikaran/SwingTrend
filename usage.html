@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Swing Algorithm" href="swing_algorithm.html" /><link rel="prev" title="Swing documentation" href="index.html" />
 
     <!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
-        <title>Usage - SwingTrend 1.0.2 documentation</title>
+        <title>Usage - SwingTrend 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">SwingTrend 1.0.2 documentation</div></a>
+      <a href="index.html"><div class="brand">SwingTrend 2.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">SwingTrend 1.0.2 documentation</span>
+  <span class="sidebar-brand-text">SwingTrend 2.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -254,7 +254,9 @@
 </section>
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
-<p>Basic example</p>
+<p>For conciseness, only the relevant bits of code have been shown.</p>
+<section id="basic-example">
+<h3>Basic example<a class="headerlink" href="#basic-example" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">swingtrend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Swing</span>
 
 <span class="n">swing</span> <span class="o">=</span> <span class="n">Swing</span><span class="p">(</span><span class="n">retrace_threshold_pct</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -270,12 +272,80 @@
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SPL: </span><span class="si">{</span><span class="n">swing</span><span class="o">.</span><span class="n">spl</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">swing</span><span class="o">.</span><span class="n">spl_dt</span><span class="si">:</span><span class="s2">%d %b %Y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CoCh: </span><span class="si">{</span><span class="n">swing</span><span class="o">.</span><span class="n">coc</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">swing</span><span class="o">.</span><span class="n">coc_dt</span><span class="si">:</span><span class="s2">%d %b %Y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="n">swing</span><span class="o">.</span><span class="n">is_sideways</span><span class="p">()</span> <span class="c1"># bool True or False</span>
+<span class="n">swing</span><span class="o">.</span><span class="n">is_sideways</span> <span class="c1"># bool True or False</span>
+
+<span class="c1"># Are enough candles present to accurately determine trend?</span>
+<span class="n">swing</span><span class="o">.</span><span class="n">is_trend_stable</span> <span class="c1"># bool True or False</span>
 
 <span class="n">swing</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Example showing how to plot lines in mplfinance</p>
+</section>
+<section id="screening-stocks">
+<h3>Screening stocks<a class="headerlink" href="#screening-stocks" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">sym</span> <span class="ow">in</span> <span class="n">watchlist</span><span class="p">:</span>
+ <span class="n">swing</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sym</span><span class="o">=</span><span class="n">sym</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">60</span><span class="p">:])</span>
+
+ <span class="k">if</span> <span class="n">swing</span><span class="o">.</span><span class="n">trend</span> <span class="o">==</span> <span class="s2">&quot;UP&quot;</span> <span class="ow">and</span> <span class="n">swing</span><span class="o">.</span><span class="n">bars_since</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">swing</span><span class="o">.</span><span class="n">bars_since</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">:</span>
+     <span class="c1"># Stocks in uptrend with a pullback between 4 and 15 bars.</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">sym</span><span class="p">)</span>
+
+ <span class="n">swing</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> <span class="c1"># Dont forget to reset after each iteration.</span>
+</pre></div>
+</div>
+</section>
+<section id="attaching-callback-functions">
+<h3>Attaching callback functions<a class="headerlink" href="#attaching-callback-functions" title="Link to this heading">¶</a></h3>
+<p>Here we look for stocks which have reversed to uptrend or broken above the SPH.</p>
+<p>The stocks are collected into a list and printed at the end.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="n">breakout_lst</span> <span class="o">=</span> <span class="p">[]</span>
+ <span class="n">reversal_lst</span> <span class="o">=</span> <span class="p">[]</span>
+
+ <span class="c1"># The two functions below will be attached to the Swing class</span>
+ <span class="k">def</span><span class="w"> </span><span class="nf">bos</span><span class="p">(</span><span class="n">swing</span><span class="p">:</span> <span class="n">Swing</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">close</span><span class="p">,</span> <span class="n">breakout_level</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">date</span> <span class="o">!=</span> <span class="n">swing</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="c1"># We only want stocks for today and not previous dates.</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">swing</span><span class="o">.</span><span class="n">trend</span> <span class="o">==</span> <span class="s2">&quot;UP&quot;</span> <span class="ow">and</span> <span class="n">swing</span><span class="o">.</span><span class="n">is_trend_stable</span><span class="p">:</span>
+        <span class="n">breakout_lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">swing</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">date</span><span class="si">:</span><span class="s2">%d %b %Y</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">swing</span><span class="o">.</span><span class="n">symbol</span><span class="si">}</span><span class="s2"> break @ </span><span class="si">{</span><span class="n">breakout_level</span><span class="si">}</span><span class="s2"> with close @ </span><span class="si">{</span><span class="n">close</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+ <span class="k">def</span><span class="w"> </span><span class="nf">reversal</span><span class="p">(</span><span class="n">swing</span><span class="p">:</span> <span class="n">Swing</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">close</span><span class="p">,</span> <span class="n">reversal_level</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">date</span> <span class="o">!=</span> <span class="n">swing</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Trend was down and now reversed to UP</span>
+    <span class="k">if</span> <span class="n">swing</span><span class="o">.</span><span class="n">trend</span> <span class="o">==</span> <span class="s2">&quot;UP&quot;</span> <span class="ow">and</span> <span class="n">swing</span><span class="o">.</span><span class="n">is_trend_stable</span><span class="p">:</span>
+        <span class="n">breakout_lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">swing</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">date</span><span class="si">:</span><span class="s2">%d %b %Y</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">swing</span><span class="o">.</span><span class="n">symbol</span><span class="si">}</span><span class="s2"> reversed @ </span><span class="si">{</span><span class="n">reversal_level</span><span class="si">}</span><span class="s2"> with close @ </span><span class="si">{</span><span class="n">close</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+ <span class="n">swing</span> <span class="o">=</span> <span class="n">Swing</span><span class="p">()</span>
+
+ <span class="c1"># Attach the functions to Swing class</span>
+ <span class="n">swing</span><span class="o">.</span><span class="n">on_breakout</span> <span class="o">=</span> <span class="n">bos</span>
+ <span class="n">swing</span><span class="o">.</span><span class="n">on_reversal</span> <span class="o">=</span> <span class="n">reversal</span>
+
+ <span class="k">for</span> <span class="n">sym</span> <span class="ow">in</span> <span class="n">watchlist</span><span class="p">:</span>
+    <span class="n">swing</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sym</span><span class="o">=</span><span class="n">sym</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">60</span><span class="p">:])</span>
+    <span class="n">swing</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">breakout_lst</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Breakouts&quot;</span><span class="p">,</span> <span class="n">breakout_lst</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">reversal_lst</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reversals&quot;</span><span class="p">,</span> <span class="n">reversal_lst</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="plot-with-mplfinance">
+<h3>Plot with mplfinance<a class="headerlink" href="#plot-with-mplfinance" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mplfinance</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">swingtrend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Swing</span>
 
@@ -285,10 +355,8 @@
 <span class="c1"># here we pass additional candles since it takes 40 candles to confirm the trend.</span>
 <span class="n">swing</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sym</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">160</span><span class="p">:],</span> <span class="n">plot_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Once swing.run completes,</span>
-<span class="c1"># swing.plot_lines provides the line coordinates</span>
-<span class="c1"># swing.plot_colors provides the line colors</span>
-
+<span class="c1"># `swing.plot_lines` provides the line coordinates</span>
+<span class="c1"># `swing.plot_colors` provides the line colors</span>
 <span class="c1"># Add the lines and colors to alines</span>
 <span class="n">mpf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">df</span><span class="p">,</span>
@@ -305,7 +373,17 @@
 <span class="p">)</span>
 </pre></div>
 </div>
+<figure class="align-default" id="id1">
+<img alt="_images/marksans-daily.png" src="_images/marksans-daily.png" />
+<figcaption>
+<p><span class="caption-text">In the chart, green lines indicate the CoCh levels in uptrend. Red line represent CoCh levels in downtrend.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="using-swing-identify">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">Swing.identify</span></code><a class="headerlink" href="#using-swing-identify" title="Link to this heading">¶</a></h3>
 <p>Pandas is not a requirement. You can provide OHLC data from any source to <code class="docutils literal notranslate"><span class="pre">Swing.identify</span></code>.</p>
+<p>You can also pass OHLC data generated from websocket feeds for real-time trend identification.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ohlc_tuple</span> <span class="o">=</span> <span class="p">(</span>
   <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">93</span><span class="p">),</span>
   <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">95</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">88</span><span class="p">),</span>
@@ -319,6 +397,9 @@
     <span class="n">swing</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="o">*</span><span class="n">tup</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="debug-mode">
+<h3>Debug Mode<a class="headerlink" href="#debug-mode" title="Link to this heading">¶</a></h3>
 <p>Debug mode is useful when trying to understand the program. Have a chart in front and read the logs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">swingtrend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Swing</span>
@@ -327,8 +408,49 @@
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(levelname)s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
 
 <span class="n">swing</span> <span class="o">=</span> <span class="n">Swing</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># DEBUG: 2024-12-09 00:00:00: First Candle: High 377.45 Low: 370.1</span>
+<span class="c1"># DEBUG: 2024-12-10 00:00:00: Start Trend: UP High: 383.4</span>
+<span class="c1"># DEBUG: 2024-12-11 00:00:00: New High: 388.65</span>
+<span class="c1"># DEBUG: 2024-12-12 00:00:00: New High: 391.5</span>
+<span class="c1"># DEBUG: 2024-12-13 00:00:00: Swing High - UP SPH: 391.5 CoCh: 370.1</span>
+<span class="c1"># DEBUG: 2024-12-17 00:00:00: Reversal DOWN Low: 363.25 CoCh: 391.5</span>
+<span class="c1"># DEBUG: 2024-12-18 00:00:00: New Low: 362.3</span>
+<span class="c1"># DEBUG: 2024-12-19 00:00:00: New Low: 358.6</span>
+<span class="c1"># DEBUG: 2024-12-20 00:00:00: New Low: 355.2</span>
+<span class="c1"># DEBUG: 2024-12-23 00:00:00: New Low: 346.45</span>
+<span class="c1"># DEBUG: 2024-12-24 00:00:00: Swing Low - DOWN SPL: 346.45 CoCh: 391.5</span>
 </pre></div>
 </div>
+</section>
+<section id="adding-a-series-to-pandas-dataframe">
+<h3>Adding a series to Pandas DataFrame<a class="headerlink" href="#adding-a-series-to-pandas-dataframe" title="Link to this heading">¶</a></h3>
+<p>Set <code class="docutils literal notranslate"><span class="pre">add_series</span></code> argument in swing.run to True. This is useful for backtesting historical data.
+The first 40 candles will be None, since the trend is not fully confirmed till then.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">swing</span> <span class="o">=</span> <span class="n">Swing</span><span class="p">()</span>
+
+<span class="n">swing</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sym</span><span class="o">=</span><span class="n">sym</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">add_series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1">#               Open    High     Low   Close   Volume TREND IS_SIDEWAYS</span>
+<span class="c1"># Date</span>
+<span class="c1"># 2024-07-15  250.81  255.00  242.76  252.98  2601155  None        None</span>
+<span class="c1"># 2024-07-16  252.80  256.50  247.00  254.01  3210967  None        None</span>
+<span class="c1"># 2024-07-18  250.00  258.00  244.00  245.16  3355053  None        None</span>
+<span class="c1"># 2024-07-19  248.00  258.59  241.60  244.69  8460052  None        None</span>
+<span class="c1"># 2024-07-22  244.50  249.39  240.81  244.57  2066923  None        None</span>
+<span class="c1"># ...            ...     ...     ...     ...      ...   ...         ...</span>
+<span class="c1"># 2025-02-24  364.00  364.00  355.20  360.25  1305661     0           0</span>
+<span class="c1"># 2025-02-25  358.00  365.35  352.00  354.05  2113683     0           0</span>
+<span class="c1"># 2025-02-27  357.00  362.95  347.60  356.75  1797225     0           1</span>
+<span class="c1"># 2025-02-28  353.00  355.40  340.00  346.00  2773439     0           1</span>
+<span class="c1"># 2025-03-03  342.50  356.95  327.85  352.10  2583375     0           1</span>
+<span class="c1">#</span>
+<span class="c1"># [160 rows x 7 columns]</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 
@@ -389,7 +511,16 @@
             <ul>
 <li><a class="reference internal" href="#">Usage</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#basic-example">Basic example</a></li>
+<li><a class="reference internal" href="#screening-stocks">Screening stocks</a></li>
+<li><a class="reference internal" href="#attaching-callback-functions">Attaching callback functions</a></li>
+<li><a class="reference internal" href="#plot-with-mplfinance">Plot with mplfinance</a></li>
+<li><a class="reference internal" href="#using-swing-identify">Using <code class="docutils literal notranslate"><span class="pre">Swing.identify</span></code></a></li>
+<li><a class="reference internal" href="#debug-mode">Debug Mode</a></li>
+<li><a class="reference internal" href="#adding-a-series-to-pandas-dataframe">Adding a series to Pandas DataFrame</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -401,7 +532,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=1ed6394b"></script>
+</div><script src="_static/documentation_options.js?v=51b770b3"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>

@@ -3,6 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+===================
 Swing documentation
 ===================
 
@@ -16,7 +17,6 @@ Pandas and Mplfinance are optional requirements depending on your usage and requ
 
 Introduction:
 =============
-
 
 The ``Swing`` class works on the same principles of **Higher Highs** and **Higher Lows** (in an uptrend) and **Lower Lows** and **Lower Highs** (in a downtrend).
 
@@ -42,7 +42,6 @@ In an uptrend, CoCh is the lowest point between the SPH and the candle that clos
 In a downtrend, CoCh is the highest point between the SPL and the candle that closes below the SPL.
 
 .. image:: images/line-structure.png
-
 
 See this youtube video: `How To Understand Market Structure <https://www.youtube.com/watch?v=Pd9ASRCHWmQ&t=251>`_ for a deeper understanding.
 
