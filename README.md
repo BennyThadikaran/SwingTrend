@@ -26,7 +26,12 @@ If you ❤️ my work so far, please 🌟 this repo.
 from swingtrend import Swing`
 
 # Initialise with default values
-swing = Swing(retrace_threshold_pct=5, sideways_threshold=20, minimum_bar_count=40, debug=False)
+swing = Swing(
+    retrace_threshold_pct=5,
+    sideways_threshold=20,
+    minimum_bar_count=40,
+    debug=False,
+)
 
 swing = swing.run(sym="HDFCBANK", df.iloc[-60:])
 
@@ -64,7 +69,7 @@ See the documentation for more details.
 
 ## Inspiration
 
-This work was inspired by youtube Channel **Matt Donlevey - Photon Trading**.
+This work was inspired by youtube channel **Matt Donlevey - Photon Trading**.
 
 You can watch their video [How To Understand Market Structure](https://www.youtube.com/watch?v=Pd9ASRCHWmQ&t=251) to understand some of the concepts.
 
