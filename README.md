@@ -8,7 +8,7 @@ Python version: >= 3.8
 - Use it as a trend indicator or screener.
 - Lightweight and serializable. The Class state can be saved/restored. Useful for day-to-day tracking of trends.
 - Timeframe agnostic - pass data from any timeframe to establish the current trend.
-- Linux, Windows, and Mac. No external dependencies.
+- Linux, Windows, and Mac. No external dependencies. 90% test coverage of core functionality.
 
 If you ❤️ my work so far, please 🌟 this repo.
 
@@ -20,19 +20,23 @@ If you ❤️ my work so far, please 🌟 this repo.
 
 `pip install swingtrend`
 
-## Basic Usage
+## Basic Usage (As of v2.0.0)
 
 ```py
 from swingtrend import Swing`
 
 # Initialise with default values
-swing = Swing(retrace_threshold_pct=5, sideways_threshold=20, debug=False)
+swing = Swing(retrace_threshold_pct=5, sideways_threshold=20, minimum_bar_count=40, debug=False)
 
 swing = swing.run(sym="HDFCBANK", df.iloc[-60:])
 
 swing.trend # UP or DOWN or None
 
-swing.is_sideways() # True or False.
+swing.is_sideways # True or False.
+
+swing.bars_since # Count of candles since last swing high or low.
+
+swing.is_trend_stable # Is trend accurate, given the number candles supplied?
 
 swing.sph # if trend is UP and SPH is confirmed else None
 
@@ -43,6 +47,10 @@ swing.coc # Reversal price for the current trend.
 swing.high # the current highest high within a swing.
 
 swing.low # the current lowest low within a swing.
+
+swing.df # A reference to the dataframe passed to Swing.run()
+
+swing.symbol # Symbol name passed to Swing.run()
 
 # Below represent datetime of the respective candles.
 swing.sph_dt
