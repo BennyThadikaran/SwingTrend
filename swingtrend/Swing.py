@@ -57,6 +57,8 @@ class Swing:
     @property
     def bars_since(self) -> int:
         """
+        .. versionadded:: 2.0.0
+
         Bar count since last swing high or low.
 
         :type: int
@@ -66,6 +68,8 @@ class Swing:
     @property
     def is_trend_stable(self) -> bool:
         """
+        .. versionadded:: 2.0.0
+
         Have enough bars been accumulated to accurately determine the trend?
 
         :type: bool
@@ -75,6 +79,8 @@ class Swing:
     @property
     def is_sideways(self) -> bool:
         """
+        .. versionadded:: 2.0.0
+
         Is the instrument range bound or in a sideways trend?
 
         The instrument is considered sideways, if the number of bars since the last SPH or SPL was formed exceeds ``Swing.sideways_threshold``
@@ -90,6 +96,8 @@ class Swing:
     @property
     def leg_count(self) -> int:
         """
+        .. versionadded:: 2.0.1
+
         Number of swing legs, the trend has completed.
 
         - Reset to zero on trend reversal.
