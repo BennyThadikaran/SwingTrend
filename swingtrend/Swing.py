@@ -20,9 +20,9 @@ class Swing:
 
     df = None
 
-    high = low = coc = sph = spl = retrace_threshold_pct = None
+    high = low = coc = sph = spl = None
 
-    coc_dt = sph_dt = spl_dt = retrace_threshold = None
+    coc_dt = sph_dt = spl_dt = __retrace_threshold = None
 
     symbol: Optional[str] = None
 
@@ -38,7 +38,7 @@ class Swing:
     ):
 
         if retrace_threshold_pct:
-            self.retrace_threshold = retrace_threshold_pct / 100
+            self.retrace_threshold_pct = retrace_threshold_pct
 
         self.sideways_threshold = sideways_threshold
 
@@ -85,6 +85,24 @@ class Swing:
         :type: bool
         """
         return self.__bars_since > self.sideways_threshold
+
+    @property
+    def retrace_threshold_pct(self) -> Optional[float]:
+        """Retrace threshold percent. Minimum retracement required to qualify a Change of Character (CoCh) level.
+
+        :setter: Sets the retrace threshold percent
+        :type: float or None
+        """
+        if self.__retrace_threshold:
+            return self.__retrace_threshold * 100
+        return None
+
+    @retrace_threshold_pct.setter
+    def retrace_threshold_pct(self, value: Optional[float]):
+        """
+        Set the retrace threshold percent.
+        """
+        self.__retrace_threshold = value / 100 if value else None
 
     def run(self, sym: str, df, plot_lines=False, add_series=False):
         """
@@ -204,8 +222,8 @@ class Swing:
                     self.__bars_since = 0
 
                     if (
-                        self.retrace_threshold
-                        and abs(retrace_pct) < self.retrace_threshold
+                        self.__retrace_threshold
+                        and abs(retrace_pct) < self.__retrace_threshold
                     ):
                         return
 
@@ -293,8 +311,8 @@ class Swing:
                     self.__bars_since = 0
 
                     if (
-                        self.retrace_threshold
-                        and retrace_pct < self.retrace_threshold
+                        self.__retrace_threshold
+                        and retrace_pct < self.__retrace_threshold
                     ):
                         return
 
