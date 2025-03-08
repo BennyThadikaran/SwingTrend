@@ -20,7 +20,7 @@ If you ❤️ my work so far, please 🌟 this repo.
 
 `pip install swingtrend`
 
-## Basic Usage (As of v2.0.0)
+## Basic Usage (As of v2.0.1`)
 
 ```py
 from swingtrend import Swing`
@@ -42,6 +42,8 @@ swing.is_sideways # True or False.
 swing.bars_since # Count of candles since last swing high or low.
 
 swing.is_trend_stable # Is trend accurate, given the number candles supplied?
+
+swing.leg_count # Number of swing legs, the trend has completed.
 
 swing.sph # if trend is UP and SPH is confirmed else None
 
