@@ -48,6 +48,7 @@ class TestSwing(unittest.TestCase):
         """Test there are no callables or unserializable objects after packing"""
 
         self.swing.on_breakout = self.swing.on_reversal = print
+        self.swing.df = ""
 
         dct = self.swing.pack()
         self.assertIsInstance(dct, dict)
@@ -56,6 +57,29 @@ class TestSwing(unittest.TestCase):
         self.assertNotIn("on_reversal", dct)
         self.assertNotIn("on_breakout", dct)
         self.assertNotIn("logger", dct)
+        self.assertNotIn("df", dct)
+
+    def test_is_sideways(self):
+        self.assertEqual(self.swing.is_sideways, False)
+
+        self.swing.unpack(dict(_Swing__bars_since=25, sideways_threshold=20))
+
+        self.assertEqual(self.swing.is_sideways, True)
+
+    def test_is_trend_stable(self):
+        self.assertEqual(self.swing.is_trend_stable, False)
+
+        self.swing.unpack(
+            dict(_Swing__total_bar_count=60, minimum_bar_count=40)
+        )
+
+        self.assertEqual(self.swing.is_trend_stable, True)
+
+        self.swing.unpack(
+            dict(_Swing__total_bar_count=35, minimum_bar_count=40)
+        )
+
+        self.assertEqual(self.swing.is_trend_stable, False)
 
     def test_reset(self):
         data = dict(
@@ -78,6 +102,7 @@ class TestSwing(unittest.TestCase):
         self.swing.reset()
 
         self.assertEqual(self.swing.bars_since, 0)
+        self.assertEqual(self.swing.leg_count, 0)
 
         data.pop("_Swing__bars_since")
 
