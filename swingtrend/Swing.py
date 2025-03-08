@@ -52,6 +52,7 @@ class Swing:
         self.plot = False
         self.__bars_since = 0
         self.__total_bar_count = 0
+        self.__leg_count = 0
 
     @property
     def bars_since(self) -> int:
@@ -85,6 +86,16 @@ class Swing:
         :type: bool
         """
         return self.__bars_since > self.sideways_threshold
+
+    @property
+    def leg_count(self) -> int:
+        """
+        Number of swing legs, the trend has completed.
+
+        - Reset to zero on trend reversal.
+        - Incremented on break of structure.
+        """
+        return self.__leg_count
 
     @property
     def retrace_threshold_pct(self) -> Optional[float]:
@@ -229,6 +240,7 @@ class Swing:
 
                     self.coc = self.low
                     self.coc_dt = self.low_dt
+                    self.__leg_count += 1
 
                     self.logger.debug(
                         f"{date}: BOS UP CoCh: {self.coc} Retrace: {retrace_pct:.2%}"
@@ -318,6 +330,8 @@ class Swing:
 
                     self.coc = self.high
                     self.coc_dt = self.high_dt
+                    self.__leg_count += 1
+
                     self.logger.debug(f"{date}: BOS DOWN CoCh: {self.coc}")
 
                     if self.plot:
@@ -385,6 +399,7 @@ class Swing:
 
         self.__bars_since = 0
         self.__total_bar_count = 0
+        self.__leg_count = 0
 
         if self.plot:
             self.df = None
@@ -444,6 +459,7 @@ class Swing:
         self.low = low
         self.low_dt = date
         self.__bars_since = 0
+        self.__leg_count = 0
 
         if self.plot:
             line_end_dt = self.__line_end_dt(self.coc_dt)
@@ -469,6 +485,7 @@ class Swing:
         self.high = high
         self.high_dt = date
         self.__bars_since = 0
+        self.__leg_count = 0
 
         if self.plot:
             line_end_dt = self.__line_end_dt(self.coc_dt)
