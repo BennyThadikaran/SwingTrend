@@ -86,6 +86,16 @@ class TestSwing(unittest.TestCase):
 
         self.assertEqual(self.swing.bars_since, 0)
 
+    def test_retrace_threshold_setter(self):
+        self.assertIsNone(self.swing.retrace_threshold_pct)
+
+        self.swing.retrace_threshold_pct = 5
+
+        self.assertEqual(self.swing.retrace_threshold_pct, 5)
+
+        sw = Swing(retrace_threshold_pct=10)
+        self.assertEqual(sw.retrace_threshold_pct, 10)
+
     def test_first_bar(self):
         """First bar marks the high and low"""
 
@@ -365,7 +375,7 @@ class TestSwing(unittest.TestCase):
 
         dt = datetime(2023, 12, 25)
 
-        self.swing.retrace_threshold = 8 / 100
+        self.swing.retrace_threshold_pct = 8
 
         self.swing.unpack(
             dict(
