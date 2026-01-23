@@ -46,6 +46,7 @@ class Swing:
 
     def __init__(
         self,
+        symbol: Optional[str] = None,
         retrace_threshold_pct: Optional[float] = 5.0,
         sideways_threshold: int = 20,
         minimum_bar_count: int = 40,
@@ -53,6 +54,8 @@ class Swing:
         on_reversal: Optional[Callable] = None,
         debug=False,
     ):
+        self.symbol = symbol
+
         self.trend: Optional[Literal["UP", "DOWN"]] = None
 
         self.df = None
