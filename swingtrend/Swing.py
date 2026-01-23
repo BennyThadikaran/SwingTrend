@@ -16,26 +16,53 @@ class Swing:
     :type debug: bool
     """
 
-    trend: Optional[Literal["UP", "DOWN"]] = None
-
-    df = None
-
-    high = low = coc = sph = spl = None
-
-    coc_dt = sph_dt = spl_dt = __retrace_threshold = None
-
-    symbol: Optional[str] = None
-
-    on_reversal: Optional[Callable] = None
-    on_breakout: Optional[Callable] = None
+    __slots__ = (
+        "trend",
+        "df",
+        "low",
+        "low_dt",
+        "high",
+        "high_dt",
+        "coc",
+        "coc_dt",
+        "sph",
+        "sph_dt",
+        "spl",
+        "spl_dt",
+        "symbol",
+        "on_breakout",
+        "on_reversal",
+        "_retrace_threshold",
+        "sideways_threshold",
+        "minimum_bar_count",
+        "logger",
+        "plot",
+        "_bars_since",
+        "_total_bar_count",
+        "_leg_count",
+        "plot_colors",
+        "plot_lines",
+    )
 
     def __init__(
         self,
         retrace_threshold_pct: Optional[float] = 5.0,
         sideways_threshold: int = 20,
         minimum_bar_count: int = 40,
+        on_breakout: Optional[Callable] = None,
+        on_reversal: Optional[Callable] = None,
         debug=False,
     ):
+        self.trend: Optional[Literal["UP", "DOWN"]] = None
+
+        self.df = None
+
+        self.high = self.low = self.coc = self.sph = self.spl = None
+
+        self.coc_dt = self.sph_dt = self.spl_dt = self._retrace_threshold = None
+
+        self.on_reversal = on_reversal
+        self.on_breakout = on_breakout
 
         if retrace_threshold_pct:
             self.retrace_threshold_pct = retrace_threshold_pct
@@ -50,9 +77,9 @@ class Swing:
         self.minimum_bar_count = minimum_bar_count
 
         self.plot = False
-        self.__bars_since = 0
-        self.__total_bar_count = 0
-        self.__leg_count = 0
+        self._bars_since = 0
+        self._total_bar_count = 0
+        self._leg_count = 0
 
     @property
     def bars_since(self) -> int:
@@ -63,7 +90,7 @@ class Swing:
 
         :type: int
         """
-        return self.__bars_since
+        return self._bars_since
 
     @property
     def is_trend_stable(self) -> bool:
@@ -74,7 +101,7 @@ class Swing:
 
         :type: bool
         """
-        return self.__total_bar_count > self.minimum_bar_count
+        return self._total_bar_count > self.minimum_bar_count
 
     @property
     def is_sideways(self) -> bool:
@@ -91,7 +118,7 @@ class Swing:
 
         :type: bool
         """
-        return self.__bars_since > self.sideways_threshold
+        return self._bars_since > self.sideways_threshold
 
     @property
     def leg_count(self) -> int:
@@ -103,7 +130,7 @@ class Swing:
         - Reset to zero on trend reversal.
         - Incremented on break of structure.
         """
-        return self.__leg_count
+        return self._leg_count
 
     @property
     def retrace_threshold_pct(self) -> Optional[float]:
@@ -112,8 +139,8 @@ class Swing:
         :setter: Sets the retrace threshold percent
         :type: float or None
         """
-        if self.__retrace_threshold:
-            return self.__retrace_threshold * 100
+        if self._retrace_threshold:
+            return self._retrace_threshold * 100
         return None
 
     @retrace_threshold_pct.setter
@@ -121,7 +148,7 @@ class Swing:
         """
         Set the retrace threshold percent.
         """
-        self.__retrace_threshold = value / 100 if value else None
+        self._retrace_threshold = value / 100 if value else None
 
     def run(self, sym: str, df, plot_lines=False, add_series=False):
         """
@@ -176,16 +203,14 @@ class Swing:
         :param close: Candle close
         :type close: float
         """
-        self.__total_bar_count += 1
+        self._total_bar_count += 1
 
         if self.trend is None:
             if self.high is None or self.low is None:
                 self.high = high
                 self.low = low
                 self.high_dt = self.low_dt = date
-                self.logger.debug(
-                    f"{date}: First Candle: High {high} Low: {low}"
-                )
+                self.logger.debug(f"{date}: First Candle: High {high} Low: {low}")
                 return
 
             # Set the trend when first bar high or low is broken
@@ -221,11 +246,11 @@ class Swing:
             # Increment bar count on every bar
             # Reset count, if SPH is broken or reversal to downtrend
             # or new highs are being formed.
-            self.__bars_since += 1
+            self._bars_since += 1
 
             if self.sph:
                 if self.high and high > self.high:
-                    self.__bars_since = 0
+                    self._bars_since = 0
                     self.high = high
                     self.high_dt = date
 
@@ -238,24 +263,24 @@ class Swing:
 
                     sph = self.sph
                     self.sph = self.sph_dt = None
-                    self.__bars_since = 0
+                    self._bars_since = 0
 
                     if (
-                        self.__retrace_threshold
-                        and abs(retrace_pct) < self.__retrace_threshold
+                        self._retrace_threshold
+                        and abs(retrace_pct) < self._retrace_threshold
                     ):
                         return
 
                     self.coc = self.low
                     self.coc_dt = self.low_dt
-                    self.__leg_count += 1
+                    self._leg_count += 1
 
                     self.logger.debug(
                         f"{date}: BOS UP CoCh: {self.coc} Retrace: {retrace_pct:.2%}"
                     )
 
                     if self.plot:
-                        line_end_dt = self.__line_end_dt(self.coc_dt)
+                        line_end_dt = self._line_end_dt(self.coc_dt)
 
                         self.plot_lines.append(
                             ((self.coc_dt, self.coc), (line_end_dt, self.coc))
@@ -272,7 +297,7 @@ class Swing:
                     return
 
             if self.high and high > self.high:
-                self.__bars_since = 0
+                self._bars_since = 0
                 self.high = high
                 self.high_dt = date
                 self.low = low
@@ -283,7 +308,7 @@ class Swing:
                     self.sph = self.high
                     self.sph_dt = self.high_dt
                     self.low = self.low_dt = None
-                    self.__bars_since = 1  # reset but count the current bar
+                    self._bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
                         f"{date}: Swing High - UP SPH: {self.sph} CoCh: {self.coc}"
@@ -295,7 +320,7 @@ class Swing:
 
                 if self.coc and close < self.coc:
                     price_level = self.coc
-                    self.__switch_downtrend(date, low)
+                    self._switch_downtrend(date, low)
 
                     if self.on_reversal:
                         self.on_reversal(
@@ -310,12 +335,11 @@ class Swing:
             # Increment bar count on every bar
             # Reset count, if SPL is broken or reversal to downtrend
             # or new lows are being formed.
-            self.__bars_since += 1
+            self._bars_since += 1
 
             if self.spl:
-
                 if self.low and low < self.low:
-                    self.__bars_since = 0
+                    self._bars_since = 0
                     self.low = low
                     self.low_dt = date
 
@@ -328,22 +352,22 @@ class Swing:
 
                     spl = self.spl
                     self.spl = self.spl_dt = None
-                    self.__bars_since = 0
+                    self._bars_since = 0
 
                     if (
-                        self.__retrace_threshold
-                        and retrace_pct < self.__retrace_threshold
+                        self._retrace_threshold
+                        and retrace_pct < self._retrace_threshold
                     ):
                         return
 
                     self.coc = self.high
                     self.coc_dt = self.high_dt
-                    self.__leg_count += 1
+                    self._leg_count += 1
 
                     self.logger.debug(f"{date}: BOS DOWN CoCh: {self.coc}")
 
                     if self.plot:
-                        line_end_dt = self.__line_end_dt(self.coc_dt)
+                        line_end_dt = self._line_end_dt(self.coc_dt)
 
                         self.plot_lines.append(
                             (
@@ -364,7 +388,7 @@ class Swing:
                     return
 
             if self.low and low < self.low:
-                self.__bars_since = 0
+                self._bars_since = 0
                 self.low = low
                 self.high = high
                 self.low_dt = self.high_dt = date
@@ -374,7 +398,7 @@ class Swing:
                     self.spl = self.low
                     self.spl_dt = self.low_dt
                     self.high = self.high_dt = None
-                    self.__bars_since = 1  # reset but count the current bar
+                    self._bars_since = 1  # reset but count the current bar
 
                     self.logger.debug(
                         f"{date}: Swing Low - DOWN SPL: {self.spl} CoCh: {self.coc}"
@@ -386,7 +410,7 @@ class Swing:
 
                 if self.coc and close > self.coc:
                     price_level = self.coc
-                    self.__switch_uptrend(date, high)
+                    self._switch_uptrend(date, high)
 
                     if self.on_reversal:
                         self.on_reversal(
@@ -401,13 +425,11 @@ class Swing:
 
         self.high = self.low = self.trend = self.coc = self.sph = self.spl = (
             self.high_dt
-        ) = self.low_dt = self.coc_dt = self.sph_dt = self.spl_dt = self.df = (
-            None
-        )
+        ) = self.low_dt = self.coc_dt = self.sph_dt = self.spl_dt = self.df = None
 
-        self.__bars_since = 0
-        self.__total_bar_count = 0
-        self.__leg_count = 0
+        self._bars_since = 0
+        self._total_bar_count = 0
+        self._leg_count = 0
 
         if self.plot:
             self.df = None
@@ -447,7 +469,7 @@ class Swing:
         """
         self.__dict__.update(data)
 
-    def __line_end_dt(self, date):
+    def _line_end_dt(self, date):
         if self.df is None:
             raise ValueError("DataFrame not found.")
 
@@ -459,18 +481,18 @@ class Swing:
         idx = min(int(idx) + 15, len(self.df) - 1)
         return self.df.index[idx]
 
-    def __switch_downtrend(self, date, low: float):
+    def _switch_downtrend(self, date, low: float):
         self.trend = "DOWN"
         self.coc = self.high
         self.coc_dt = self.high_dt
         self.high = self.sph = self.sph_dt = None
         self.low = low
         self.low_dt = date
-        self.__bars_since = 0
-        self.__leg_count = 0
+        self._bars_since = 0
+        self._leg_count = 0
 
         if self.plot:
-            line_end_dt = self.__line_end_dt(self.coc_dt)
+            line_end_dt = self._line_end_dt(self.coc_dt)
 
             self.plot_lines.append(
                 (
@@ -485,22 +507,20 @@ class Swing:
             f"{date}: Reversal {self.trend} Low: {self.low} CoCh: {self.coc}"
         )
 
-    def __switch_uptrend(self, date, high: float):
+    def _switch_uptrend(self, date, high: float):
         self.trend = "UP"
         self.coc = self.low
         self.coc_dt = self.low_dt
         self.low = self.spl = self.spl_dt = None
         self.high = high
         self.high_dt = date
-        self.__bars_since = 0
-        self.__leg_count = 0
+        self._bars_since = 0
+        self._leg_count = 0
 
         if self.plot:
-            line_end_dt = self.__line_end_dt(self.coc_dt)
+            line_end_dt = self._line_end_dt(self.coc_dt)
 
-            self.plot_lines.append(
-                ((self.coc_dt, self.coc), (line_end_dt, self.coc))
-            )
+            self.plot_lines.append(((self.coc_dt, self.coc), (line_end_dt, self.coc)))
 
             self.plot_colors.append("g")
 
