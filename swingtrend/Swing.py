@@ -1,5 +1,58 @@
 import logging
-from typing import Callable, Literal, Optional
+from typing import Protocol, Literal, Optional
+from datetime import datetime
+
+
+class OnReversal(Protocol):
+    """
+    Callback invoked when a trend reversal is detected.
+
+    A reversal occurs when price crosses the current Change of Character (CoCh)
+    level, indicating a transition from an uptrend to a downtrend or vice versa.
+    """
+
+    def __call__(
+        self, swing: Swing, date: datetime, close: float, reversal_level: float
+    ) -> None:
+        """
+        Handle a trend reversal event.
+
+        :param swing: Active :class:`Swing` instance.
+        :type swing: Swing
+        :param date: Datetime of the bar triggering the reversal.
+        :type date: datetime
+        :param close: Closing price of the triggering bar.
+        :type close: float
+        :param reversal_level: CoCh price level that was violated.
+        :type reversal_level: float
+        """
+        ...
+
+
+class OnBreakout(Protocol):
+    """
+    Callback invoked on a break of market structure (BOS).
+
+    A breakout occurs when price closes beyond the most recent swing
+    high (uptrend) or swing low (downtrend).
+    """
+
+    def __call__(
+        self, swing: Swing, date: datetime, close: float, breakout_level: float
+    ) -> None:
+        """
+        Handle a break of structure event.
+
+        :param swing: Active :class:`Swing` instance.
+        :type swing: Swing
+        :param date: Datetime of the bar triggering the breakout.
+        :type date: datetime
+        :param close: Closing price of the triggering bar.
+        :type close: float
+        :param breakout_level: Swing high or low level that was broken.
+        :type breakout_level: float
+        """
+        ...
 
 
 class Swing:
@@ -50,8 +103,8 @@ class Swing:
         retrace_threshold_pct: Optional[float] = 5.0,
         sideways_threshold: int = 20,
         minimum_bar_count: int = 40,
-        on_breakout: Optional[Callable] = None,
-        on_reversal: Optional[Callable] = None,
+        on_breakout: Optional[OnBreakout] = None,
+        on_reversal: Optional[OnReversal] = None,
         debug=False,
     ):
         self.symbol = symbol
