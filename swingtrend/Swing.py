@@ -57,15 +57,37 @@ class OnBreakout(Protocol):
 
 class Swing:
     """
-    A class to help determine the current trend of an Stock.
+    Detect trend direction, swing structure, and market state from OHLC data.
 
-    :param retrace_threshold_pct: Default 5.0. Minimum retracement required to qualify a Change of Character (CoCh) level. If None, all retracements qualify.
+    The :class:`Swing` class processes price data sequentially to identify:
+
+    - Trend direction (``UP`` or ``DOWN``)
+    - Swing highs (SPH) and swing lows (SPL)
+    - Breaks of structure (BOS)
+    - Change of Character (CoCh) levels
+    - Sideways / range-bound conditions
+
+    The class supports optional callbacks for breakout and reversal events
+    and can generate plot-ready line data for visualization.
+
+    :param symbol: Optional instrument symbol. This value may be overridden
+        when calling :meth:`Swing.run`.
+    :type symbol: str or None
+    :param retrace_threshold_pct: Minimum retracement percentage required to
+        validate a Change of Character (CoCh). If ``None``, all retracements
+        qualify.
     :type retrace_threshold_pct: float or None
-    :param sideways_threshold: Default 20. Minimum number of bars after which the trend is considered range-bound or sideways.
+    :param sideways_threshold: Number of bars after which price action is
+        considered sideways if no new swing forms.
     :type sideways_threshold: int
-    :param minimum_bar_count: Default 40. Minimum number of bars required to accurately determine trend.
+    :param minimum_bar_count: Minimum number of bars required before the
+        trend is considered stable.
     :type minimum_bar_count: int
-    :param debug: Default False. Print additional logs for debug purposes.
+    :param on_breakout: Optional callback invoked on break of structure.
+    :type on_breakout: OnBreakout or None
+    :param on_reversal: Optional callback invoked on trend reversal.
+    :type on_reversal: OnReversal or None
+    :param debug: Enable debug-level logging.
     :type debug: bool
     """
 
@@ -140,22 +162,21 @@ class Swing:
     @property
     def bars_since(self) -> int:
         """
+        Number of bars since the last swing high or swing low.
+
         .. versionadded:: 2.0.0
-
-        Bar count since last swing high or low.
-
-        :type: int
         """
         return self._bars_since
 
     @property
     def is_trend_stable(self) -> bool:
         """
+        Determine whether the market is range-bound.
+
+        A market is considered sideways if the number of bars since the last
+        swing point exceeds ``sideways_threshold``.
+
         .. versionadded:: 2.0.0
-
-        Have enough bars been accumulated to accurately determine the trend?
-
-        :type: bool
         """
         return self._total_bar_count > self.minimum_bar_count
 
@@ -179,12 +200,12 @@ class Swing:
     @property
     def leg_count(self) -> int:
         """
+        Number of completed swing legs in the current trend.
+
+        - Reset to zero on trend reversal
+        - Incremented on each break of structure
+
         .. versionadded:: 2.0.1
-
-        Number of swing legs, the trend has completed.
-
-        - Reset to zero on trend reversal.
-        - Incremented on break of structure.
         """
         return self._leg_count
 
@@ -202,25 +223,29 @@ class Swing:
     @retrace_threshold_pct.setter
     def retrace_threshold_pct(self, value: Optional[float]):
         """
-        Set the retrace threshold percent.
+        Retracement threshold expressed as a percentage.
+
+        Represents the minimum retracement required to validate a Change
+        of Character (CoCh).
         """
         self._retrace_threshold = value / 100 if value else None
 
     def run(self, sym: str, df, plot_lines=False, add_series=False):
         """
-        Iterates through the DataFrame and determines the current trend of the instrument.
+        Process an OHLC DataFrame and evaluate market structure.
 
-        Optionally it also records CoCh levels for plotting in Matplotlib. Use `plot_lines`.
+        Iterates sequentially through the DataFrame and updates internal
+        swing and trend state.
 
-        To add the current trend data to the pandas Dataframe, use `add_series`
-
-        :param sym: Symbol name of the instrument.
+        :param sym: Instrument symbol. Overrides the ``symbol`` value provided
+            during :class:`Swing` initialization.
         :type sym: str
-        :param df: DataFrame containing OHLC data with DatetimeIndex
+        :param df: OHLC data indexed by datetime.
         :type df: pandas.DataFrame
-        :param plot_lines: Default False. Generate line data marking CoCh levels to plot in Matplotlib
+        :param plot_lines: If ``True``, record CoCh levels for plotting.
         :type plot_lines: bool
-        :param add_series: Default False. If True, adds a `TREND` and `IS_SIDEWAYS` column to the DataFrame. 1 if TREND is UP or in sideways range, 0 otherwise.
+        :param add_series: If ``True``, append ``TREND`` and ``IS_SIDEWAYS``
+            columns to the DataFrame.
         :type add_series: bool
         """
         self.symbol = sym
@@ -248,15 +273,17 @@ class Swing:
 
     def identify(self, date, high: float, low: float, close: float) -> None:
         """
-        Identify the trend with the current OHLC data.
+        Process a single OHLC bar and update swing state.
 
-        :param date: datetime of the candle
-        :type date: str or datetime
-        :param high: Candle high
+        This method must be called sequentially in time order.
+
+        :param date: Datetime of the price bar.
+        :type date: datetime
+        :param high: High price of the bar.
         :type high: float
-        :param low: Candle low
+        :param low: Low price of the bar.
         :type low: float
-        :param close: Candle close
+        :param close: Closing price of the bar.
         :type close: float
         """
         self._total_bar_count += 1
@@ -477,7 +504,11 @@ class Swing:
                         )
 
     def reset(self) -> None:
-        """Reset all properties. Used when switching to a different stock / symbol."""
+        """
+        Reset all internal state.
+
+        Used when switching symbols or restarting analysis.
+        """
 
         self.high = self.low = self.trend = self.coc = self.sph = self.spl = (
             self.high_dt
@@ -494,9 +525,13 @@ class Swing:
 
     def pack(self) -> dict:
         """
-        Get the dictionary representation of the class for serialization purposes.
+        Serialize the current state of the instance.
 
-        Used to store the current state of the class, so as to resume later
+        Non-serializable attributes such as loggers, callbacks, and
+        DataFrame references are excluded.
+
+        :return: Serializable state dictionary.
+        :rtype: dict
         """
         dct = self.__dict__.copy()
 
@@ -516,11 +551,9 @@ class Swing:
 
     def unpack(self, data: dict) -> None:
         """
-        Update the class with data from the dictionary.
+        Restore internal state from serialized data.
 
-        Used to restore a previously saved state and resume operations.
-
-        :param data: Dictionary data obtained from Swing.pack.
+        :param data: Dictionary produced by :meth:`pack`.
         :type data: dict
         """
         self.__dict__.update(data)
