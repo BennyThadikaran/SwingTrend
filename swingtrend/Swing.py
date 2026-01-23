@@ -151,6 +151,8 @@ class Swing:
 
         if debug:
             self.logger.setLevel(logging.DEBUG)
+        else:
+            self.logger.setLevel(logging.INFO)
 
         self.minimum_bar_count = minimum_bar_count
 
