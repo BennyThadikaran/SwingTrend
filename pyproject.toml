@@ -4,7 +4,7 @@ requires = [ "hatchling" ]
 
 [project]
 name = "swingtrend"
-version = "2.0.2-1"
+version = "2.0.3"
 description = "A mechanical approach to determine the trend of a stock along with breakout and reversal levels."
 readme = "README.md"
 keywords = [ "finance", "python3", "stock-markets", "technical-analysis", "technical-indicators", "trend-detection" ]
