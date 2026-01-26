@@ -529,8 +529,11 @@ class Swing:
         """
         Serialize the current state of the instance.
 
-        Non-serializable attributes such as loggers, callbacks, and
-        DataFrame references are excluded.
+        Loggers and callbacks are excluded. dataframe references are set to ``None``.
+
+        Attributes containing date/time-like objects
+        (e.g. ``datetime``, ``date``, pandas ``Timestamp``) are included as-is
+        and are not converted to strings.
 
         :return: Serializable state dictionary.
         :rtype: dict
@@ -550,6 +553,15 @@ class Swing:
     def unpack(self, data: dict) -> None:
         """
         Restore internal state from serialized data.
+
+        The input dictionary is expected to be produced by :meth:`pack`.
+
+        No type coercion or validation is performed during unpacking.
+
+        In particular, date/time-like
+        objects (e.g. ``datetime``, ``date``, pandas ``Timestamp``) are
+        assigned as-is and are not parsed or reconverted from string
+        representations.
 
         :param data: Dictionary produced by :meth:`pack`.
         :type data: dict
