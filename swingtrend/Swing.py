@@ -539,15 +539,11 @@ class Swing:
 
         # Remove non serializable objects
         del dct["logger"]
+        del dct["on_breakout"]
+        del dct["on_reversal"]
 
-        if "df" in dct:
-            del dct["df"]
-
-        if "on_reversal" in dct:
-            del dct["on_reversal"]
-
-        if "on_breakout" in dct:
-            del dct["on_breakout"]
+        dct["symbol"] = None
+        dct["df"] = None
 
         return dct
 
