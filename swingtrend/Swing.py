@@ -535,7 +535,7 @@ class Swing:
         :return: Serializable state dictionary.
         :rtype: dict
         """
-        dct = self.__dict__.copy()
+        dct = {key: getattr(self, key) for key in self.__slots__ if hasattr(self, key)}
 
         # Remove non serializable objects
         del dct["logger"]
@@ -558,7 +558,9 @@ class Swing:
         :param data: Dictionary produced by :meth:`pack`.
         :type data: dict
         """
-        self.__dict__.update(data)
+        for key in data:
+            if key in self.__slots__:
+                setattr(self, key, data[key])
 
     def _line_end_dt(self, date):
         if self.df is None:
