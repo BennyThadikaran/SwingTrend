@@ -57,7 +57,7 @@ class TestSwing(unittest.TestCase):
         self.assertNotIn("on_reversal", dct)
         self.assertNotIn("on_breakout", dct)
         self.assertNotIn("logger", dct)
-        self.assertNotIn("df", dct)
+        self.assertIsNone(dct["df"])
 
     def test_is_sideways(self):
         self.assertEqual(self.swing.is_sideways, False)
