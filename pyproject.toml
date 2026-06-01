@@ -4,11 +4,10 @@ requires = [ "hatchling" ]
 
 [project]
 name = "swingtrend"
-version = "2.0.3"
+version = "2.0.4"
 description = "A mechanical approach to determine the trend of a stock along with breakout and reversal levels."
 readme = "README.md"
 keywords = [ "finance", "python3", "stock-markets", "technical-analysis", "technical-indicators", "trend-detection" ]
-
 authors = [
   { name = "Benny Thadikaran" },
 ]
@@ -32,4 +31,4 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 urls."Bug Tracker" = "https://github.com/BennyThadikaran/SwingTrend/issues"
-urls."Homepage" = "https://github.com/BennyThadikaran/SwingTrend"
+urls.Homepage = "https://github.com/BennyThadikaran/SwingTrend"
