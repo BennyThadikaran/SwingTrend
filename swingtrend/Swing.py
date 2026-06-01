@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from typing import Protocol, Literal, Optional
 from datetime import datetime
