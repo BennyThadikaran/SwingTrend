@@ -5,6 +5,14 @@ from unittest.mock import Mock
 from context import Swing
 
 
+def noop(*args, **kwargs) -> None:
+    """
+    Dummy callback for on_reversal and on_breakout.
+    Irrelevant to the test outcome.
+    """
+    pass
+
+
 class TestSwing(unittest.TestCase):
     """
     Following test cases are covered
@@ -47,7 +55,7 @@ class TestSwing(unittest.TestCase):
     def test_pack(self):
         """Test there are no callables or unserializable objects after packing"""
 
-        self.swing.on_breakout = self.swing.on_reversal = print
+        self.swing.on_breakout = self.swing.on_reversal = noop
         self.swing.df = ""
 
         dct = self.swing.pack()
@@ -300,7 +308,7 @@ class TestSwing(unittest.TestCase):
             )
         )
 
-        mock = Mock(spec=lambda *args, **kwargs: None)
+        mock = Mock(spec=noop)
 
         self.swing.on_reversal = mock
 
@@ -320,7 +328,7 @@ class TestSwing(unittest.TestCase):
             dict(trend="DOWN", high=100, low=90, coc=105, low_dt=dt_2)
         )
 
-        mock = Mock(spec=lambda *args, **kwargs: None)
+        mock = Mock(spec=noop)
 
         self.swing.on_reversal = mock
 
@@ -477,7 +485,7 @@ class TestSwing(unittest.TestCase):
 
         self.swing.unpack(dict(trend="UP", sph=100, low=95, low_dt=dt_1))
 
-        mock = Mock(spec=lambda *args, **kwargs: None)
+        mock = Mock(spec=noop)
 
         self.swing.on_breakout = mock
 
@@ -495,7 +503,7 @@ class TestSwing(unittest.TestCase):
 
         self.swing.unpack(dict(trend="DOWN", spl=100, high=110, high_dt=dt_1))
 
-        mock = Mock(spec=lambda *args, **kwargs: None)
+        mock = Mock(spec=noop)
 
         self.swing.on_breakout = mock
 
