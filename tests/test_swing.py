@@ -62,7 +62,7 @@ class TestSwing(unittest.TestCase):
     def test_is_sideways(self):
         self.assertEqual(self.swing.is_sideways, False)
 
-        self.swing.unpack(dict(_Swing__bars_since=25, sideways_threshold=20))
+        self.swing.unpack(dict(_bars_since=25, sideways_threshold=20))
 
         self.assertEqual(self.swing.is_sideways, True)
 
@@ -94,7 +94,7 @@ class TestSwing(unittest.TestCase):
             coc_dt="",
             sph_dt="",
             spl_dt="",
-            _Swing__bars_since=9,
+            _bars_since=9,
             df="",
         )
 
@@ -104,7 +104,7 @@ class TestSwing(unittest.TestCase):
         self.assertEqual(self.swing.bars_since, 0)
         self.assertEqual(self.swing.leg_count, 0)
 
-        data.pop("_Swing__bars_since")
+        data.pop("_bars_since")
 
         for key in data.keys():
             self.assertIsNone(getattr(self.swing, key))
