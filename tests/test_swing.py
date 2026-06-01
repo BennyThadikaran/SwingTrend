@@ -69,15 +69,11 @@ class TestSwing(unittest.TestCase):
     def test_is_trend_stable(self):
         self.assertEqual(self.swing.is_trend_stable, False)
 
-        self.swing.unpack(
-            dict(_Swing__total_bar_count=60, minimum_bar_count=40)
-        )
+        self.swing.unpack(dict(_total_bar_count=60, minimum_bar_count=40))
 
         self.assertEqual(self.swing.is_trend_stable, True)
 
-        self.swing.unpack(
-            dict(_Swing__total_bar_count=35, minimum_bar_count=40)
-        )
+        self.swing.unpack(dict(_total_bar_count=35, minimum_bar_count=40))
 
         self.assertEqual(self.swing.is_trend_stable, False)
 
