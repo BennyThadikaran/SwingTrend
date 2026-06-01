@@ -31,7 +31,7 @@ class TestSwingLegCount(unittest.TestCase):
             dict(
                 trend="UP",
                 sph=100,
-                _Swing__leg_count=1,
+                _leg_count=1,
                 low_dt=datetime(2023, 12, 25),
             )
         )
@@ -46,7 +46,7 @@ class TestSwingLegCount(unittest.TestCase):
             dict(
                 trend="DOWN",
                 spl=100,
-                _Swing__leg_count=1,
+                _leg_count=1,
                 low_dt=datetime(2023, 12, 25),
             )
         )
@@ -62,7 +62,7 @@ class TestSwingLegCount(unittest.TestCase):
                 trend="UP",
                 sph=100,
                 coc=95,
-                _Swing__leg_count=5,
+                _leg_count=5,
                 high_dt=datetime(2023, 12, 26),
             )
         )
@@ -78,7 +78,7 @@ class TestSwingLegCount(unittest.TestCase):
                 trend="DOWN",
                 spl=95,
                 coc=100,
-                _Swing__leg_count=5,
+                _leg_count=5,
                 low_dt=datetime(2023, 12, 26),
             )
         )
