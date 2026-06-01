@@ -262,9 +262,7 @@ class TestSwing(unittest.TestCase):
         dt_1 = datetime(2024, 1, 1)
         dt_2 = datetime(2023, 12, 2)
 
-        self.swing.unpack(
-            dict(trend="UP", high=100, low=90, coc=85, high_dt=dt_2)
-        )
+        self.swing.unpack(dict(trend="UP", high=100, low=90, coc=85, high_dt=dt_2))
 
         self.swing.identify(dt_1, high=95, low=82, close=82)
 
@@ -280,9 +278,7 @@ class TestSwing(unittest.TestCase):
         dt_1 = datetime(2024, 1, 1)
         dt_2 = datetime(2023, 12, 2)
 
-        self.swing.unpack(
-            dict(trend="DOWN", high=100, low=90, coc=105, low_dt=dt_2)
-        )
+        self.swing.unpack(dict(trend="DOWN", high=100, low=90, coc=105, low_dt=dt_2))
 
         self.swing.identify(dt_1, high=107, low=95, close=107)
 
@@ -314,9 +310,7 @@ class TestSwing(unittest.TestCase):
 
         self.swing.identify(dt_1, high=95, low=82, close=82)
 
-        mock.assert_called_once_with(
-            self.swing, date=dt_1, close=82, reversal_level=85
-        )
+        mock.assert_called_once_with(self.swing, date=dt_1, close=82, reversal_level=85)
 
     def test_on_reversal_callback_called_in_downtrend(self):
         """On reversal callback function is called if attached"""
@@ -324,9 +318,7 @@ class TestSwing(unittest.TestCase):
         dt_1 = datetime(2024, 1, 1)
         dt_2 = datetime(2023, 12, 2)
 
-        self.swing.unpack(
-            dict(trend="DOWN", high=100, low=90, coc=105, low_dt=dt_2)
-        )
+        self.swing.unpack(dict(trend="DOWN", high=100, low=90, coc=105, low_dt=dt_2))
 
         mock = Mock(spec=noop)
 
@@ -342,9 +334,7 @@ class TestSwing(unittest.TestCase):
         """New Bar high above SPH but close below SPH"""
 
         dt = datetime(2023, 12, 25)
-        self.swing.unpack(
-            dict(trend="UP", sph=100, high=100, low=90, low_dt=dt)
-        )
+        self.swing.unpack(dict(trend="UP", sph=100, high=100, low=90, low_dt=dt))
 
         self.swing.identify(datetime(2024, 1, 1), high=105, low=95, close=99)
 
@@ -357,9 +347,7 @@ class TestSwing(unittest.TestCase):
         """New Bar low below SPL but close above SPL."""
 
         dt = datetime(2023, 12, 25)
-        self.swing.unpack(
-            dict(trend="DOWN", spl=100, high=110, low=100, high_dt=dt)
-        )
+        self.swing.unpack(dict(trend="DOWN", spl=100, high=110, low=100, high_dt=dt))
 
         self.swing.identify(datetime(2024, 1, 1), high=105, low=95, close=102)
 
@@ -373,9 +361,7 @@ class TestSwing(unittest.TestCase):
 
         dt = datetime(2023, 12, 25)
 
-        self.swing.unpack(
-            dict(trend="UP", sph=100, high=100, low=90, low_dt=dt)
-        )
+        self.swing.unpack(dict(trend="UP", sph=100, high=100, low=90, low_dt=dt))
 
         self.swing.identify(datetime(2024, 1, 1), high=103, low=95, close=102)
 
@@ -388,9 +374,7 @@ class TestSwing(unittest.TestCase):
         """SPL is set and new SPL formed."""
         dt = datetime(2023, 12, 25)
 
-        self.swing.unpack(
-            dict(trend="DOWN", spl=100, high=110, low=95, high_dt=dt)
-        )
+        self.swing.unpack(dict(trend="DOWN", spl=100, high=110, low=95, high_dt=dt))
 
         self.swing.identify(datetime(2024, 1, 1), high=103, low=93, close=93)
 
