@@ -242,8 +242,185 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
+          <section id="module-swingtrend">
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-swingtrend" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="swingtrend.Swing">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swingtrend.</span></span><span class="sig-name descname"><span class="pre">Swing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrace_threshold_pct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sideways_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_bar_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_breakout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">OnBreakout</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_reversal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">OnReversal</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swingtrend.Swing" title="Link to this definition">¶</a></dt>
+<dd><p>Detect trend direction, swing structure, and market state from OHLC data.</p>
+<p>The <a class="reference internal" href="#swingtrend.Swing" title="swingtrend.Swing"><code class="xref py py-class docutils literal notranslate"><span class="pre">Swing</span></code></a> class processes price data sequentially to identify:</p>
+<ul class="simple">
+<li><p>Trend direction (<code class="docutils literal notranslate"><span class="pre">UP</span></code> or <code class="docutils literal notranslate"><span class="pre">DOWN</span></code>)</p></li>
+<li><p>Swing highs (SPH) and swing lows (SPL)</p></li>
+<li><p>Breaks of structure (BOS)</p></li>
+<li><p>Change of Character (CoCh) levels</p></li>
+<li><p>Sideways / range-bound conditions</p></li>
+</ul>
+<p>The class supports optional callbacks for breakout and reversal events
+and can generate plot-ready line data for visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em><em> or </em><em>None</em>) – Optional instrument symbol. This value may be overridden
+when calling <a class="reference internal" href="#swingtrend.Swing.run" title="swingtrend.Swing.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Swing.run()</span></code></a>.</p></li>
+<li><p><strong>retrace_threshold_pct</strong> (<em>float</em><em> or </em><em>None</em>) – Minimum retracement percentage required to
+validate a Change of Character (CoCh). If <code class="docutils literal notranslate"><span class="pre">None</span></code>, all retracements
+qualify.</p></li>
+<li><p><strong>sideways_threshold</strong> (<em>int</em>) – Number of bars after which price action is
+considered sideways if no new swing forms.</p></li>
+<li><p><strong>minimum_bar_count</strong> (<em>int</em>) – Minimum number of bars required before the
+trend is considered stable.</p></li>
+<li><p><strong>on_breakout</strong> (<em>OnBreakout</em><em> or </em><em>None</em>) – Optional callback invoked on break of structure.</p></li>
+<li><p><strong>on_reversal</strong> (<em>OnReversal</em><em> or </em><em>None</em>) – Optional callback invoked on trend reversal.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em>) – Enable debug-level logging.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swingtrend.Swing.identify">
+<span class="sig-name descname"><span class="pre">identify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#swingtrend.Swing.identify" title="Link to this definition">¶</a></dt>
+<dd><p>Process a single OHLC bar and update swing state.</p>
+<p>This method must be called sequentially in time order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>date</strong> (<em>datetime</em>) – Datetime of the price bar.</p></li>
+<li><p><strong>high</strong> (<em>float</em>) – High price of the bar.</p></li>
+<li><p><strong>low</strong> (<em>float</em>) – Low price of the bar.</p></li>
+<li><p><strong>close</strong> (<em>float</em>) – Closing price of the bar.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swingtrend.Swing.pack">
+<span class="sig-name descname"><span class="pre">pack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#swingtrend.Swing.pack" title="Link to this definition">¶</a></dt>
+<dd><p>Serialize the current state of the instance.</p>
+<p>Loggers and callbacks are excluded. dataframe references are set to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>Attributes containing date/time-like objects
+(e.g. <code class="docutils literal notranslate"><span class="pre">datetime</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, pandas <code class="docutils literal notranslate"><span class="pre">Timestamp</span></code>) are included as-is
+and are not converted to strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Serializable state dictionary.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swingtrend.Swing.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#swingtrend.Swing.reset" title="Link to this definition">¶</a></dt>
+<dd><p>Reset all internal state.</p>
+<p>Used when switching symbols or restarting analysis.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swingtrend.Swing.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sym</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swingtrend.Swing.run" title="Link to this definition">¶</a></dt>
+<dd><p>Process an OHLC DataFrame and evaluate market structure.</p>
+<p>Iterates sequentially through the DataFrame and updates internal
+swing and trend state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sym</strong> (<em>str</em>) – Instrument symbol. Overrides the <code class="docutils literal notranslate"><span class="pre">symbol</span></code> value provided
+during <a class="reference internal" href="#swingtrend.Swing" title="swingtrend.Swing"><code class="xref py py-class docutils literal notranslate"><span class="pre">Swing</span></code></a> initialization.</p></li>
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – OHLC data indexed by datetime.</p></li>
+<li><p><strong>plot_lines</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, record CoCh levels for plotting.</p></li>
+<li><p><strong>add_series</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, append <code class="docutils literal notranslate"><span class="pre">TREND</span></code> and <code class="docutils literal notranslate"><span class="pre">IS_SIDEWAYS</span></code>
+columns to the DataFrame.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swingtrend.Swing.unpack">
+<span class="sig-name descname"><span class="pre">unpack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#swingtrend.Swing.unpack" title="Link to this definition">¶</a></dt>
+<dd><p>Restore internal state from serialized data.</p>
+<p>The input dictionary is expected to be produced by <a class="reference internal" href="#swingtrend.Swing.pack" title="swingtrend.Swing.pack"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pack()</span></code></a>.</p>
+<p>No type coercion or validation is performed during unpacking.</p>
+<p>In particular, date/time-like
+objects (e.g. <code class="docutils literal notranslate"><span class="pre">datetime</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, pandas <code class="docutils literal notranslate"><span class="pre">Timestamp</span></code>) are
+assigned as-is and are not parsed or reconverted from string
+representations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – Dictionary produced by <a class="reference internal" href="#swingtrend.Swing.pack" title="swingtrend.Swing.pack"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pack()</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swingtrend.Swing.bars_since">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bars_since</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#swingtrend.Swing.bars_since" title="Link to this definition">¶</a></dt>
+<dd><p>Number of bars since the last swing high or swing low.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swingtrend.Swing.is_sideways">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_sideways</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#swingtrend.Swing.is_sideways" title="Link to this definition">¶</a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.0.0.</span></p>
+</div>
+<p>Is the instrument range bound or in a sideways trend?</p>
+<p>The instrument is considered sideways, if the number of bars since the last SPH or SPL was formed exceeds <code class="docutils literal notranslate"><span class="pre">Swing.sideways_threshold</span></code></p>
+<p><strong>Note</strong> <code class="docutils literal notranslate"><span class="pre">swing.trend</span></code> can be UP or DOWN and still be sideways. The trend changes only on breakout or reversal.</p>
+<p>If a breakout or trend reversal occurs, the bar count is reset to 0, until a new SPH or SPL is formed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swingtrend.Swing.is_trend_stable">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_trend_stable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#swingtrend.Swing.is_trend_stable" title="Link to this definition">¶</a></dt>
+<dd><p>Determine whether the market is range-bound.</p>
+<p>A market is considered sideways if the number of bars since the last
+swing point exceeds <code class="docutils literal notranslate"><span class="pre">sideways_threshold</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swingtrend.Swing.leg_count">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">leg_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#swingtrend.Swing.leg_count" title="Link to this definition">¶</a></dt>
+<dd><p>Number of completed swing legs in the current trend.</p>
+<ul class="simple">
+<li><p>Reset to zero on trend reversal</p></li>
+<li><p>Incremented on each break of structure</p></li>
+</ul>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.0.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swingtrend.Swing.retrace_threshold_pct">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">retrace_threshold_pct</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#swingtrend.Swing.retrace_threshold_pct" title="Link to this definition">¶</a></dt>
+<dd><p>Retrace threshold percent. Minimum retracement required to qualify a Change of Character (CoCh) level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Setter<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sets the retrace threshold percent</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <section id="swing-class-properties">
 <h2>Swing Class Properties<a class="headerlink" href="#swing-class-properties" title="Link to this heading">¶</a></h2>
 <dl class="py attribute">
@@ -406,6 +583,19 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">API Reference</a><ul>
+<li><a class="reference internal" href="#swingtrend.Swing"><code class="docutils literal notranslate"><span class="pre">Swing</span></code></a><ul>
+<li><a class="reference internal" href="#swingtrend.Swing.identify"><code class="docutils literal notranslate"><span class="pre">Swing.identify()</span></code></a></li>
+<li><a class="reference internal" href="#swingtrend.Swing.pack"><code class="docutils literal notranslate"><span class="pre">Swing.pack()</span></code></a></li>
+<li><a class="reference internal" href="#swingtrend.Swing.reset"><code class="docutils literal notranslate"><span class="pre">Swing.reset()</span></code></a></li>
+<li><a class="reference internal" href="#swingtrend.Swing.run"><code class="docutils literal notranslate"><span class="pre">Swing.run()</span></code></a></li>
+<li><a class="reference internal" href="#swingtrend.Swing.unpack"><code class="docutils literal notranslate"><span class="pre">Swing.unpack()</span></code></a></li>
+<li><a class="reference internal" href="#swingtrend.Swing.bars_since"><code class="docutils literal notranslate"><span class="pre">Swing.bars_since</span></code></a></li>
+<li><a class="reference internal" href="#swingtrend.Swing.is_sideways"><code class="docutils literal notranslate"><span class="pre">Swing.is_sideways</span></code></a></li>
+<li><a class="reference internal" href="#swingtrend.Swing.is_trend_stable"><code class="docutils literal notranslate"><span class="pre">Swing.is_trend_stable</span></code></a></li>
+<li><a class="reference internal" href="#swingtrend.Swing.leg_count"><code class="docutils literal notranslate"><span class="pre">Swing.leg_count</span></code></a></li>
+<li><a class="reference internal" href="#swingtrend.Swing.retrace_threshold_pct"><code class="docutils literal notranslate"><span class="pre">Swing.retrace_threshold_pct</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#swing-class-properties">Swing Class Properties</a><ul>
 <li><a class="reference internal" href="#note-regarding-dates">Note regarding dates</a></li>
 </ul>
