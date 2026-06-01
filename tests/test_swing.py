@@ -430,7 +430,7 @@ class TestSwing(unittest.TestCase):
 
         dt = datetime(2023, 12, 25)
 
-        self.swing.retrace_threshold = 8 / 100
+        self.swing.retrace_threshold_pct = 8 / 100
 
         self.swing.unpack(
             dict(
@@ -456,7 +456,7 @@ class TestSwing(unittest.TestCase):
 
         dt = datetime(2023, 12, 25)
 
-        self.swing.retrace_threshold = 3 / 100
+        self.swing.retrace_threshold_pct = 3 / 100
 
         self.swing.unpack(
             dict(
